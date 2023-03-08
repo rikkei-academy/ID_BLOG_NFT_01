@@ -6,20 +6,24 @@ import ProjectBlogOJT.model.entity.Roles;
 import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.service.RoleService;
 import ProjectBlogOJT.model.service.UserSevice;
+import ProjectBlogOJT.payload.request.ChangePass;
 import ProjectBlogOJT.payload.request.LoginRequest;
 import ProjectBlogOJT.payload.request.SignupRequest;
 import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
+import ProjectBlogOJT.sendEmail.ProvideSendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +43,50 @@ public class UserController {
     private RoleService roleService;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private ProvideSendEmail provideSendEmail;
+
+    @GetMapping("/getToken")
+    public ResponseEntity<?> sendEmail(@RequestParam("email") String email) {
+        try {
+            String jwt = tokenProvider.generateTokenEmail(email);
+            provideSendEmail.sendSimpleMessage(email, "Token", jwt);
+            return ResponseEntity.ok("Send email successfully");
+        } catch (Exception e) {
+            return ResponseEntity.ok("Failed");
+        }
+    }
+
+    @PostMapping("/resetPass")
+    public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
+        String userName = tokenProvider.getUserNameFromJwt(token);
+        User user = userSevice.findByUserName(userName);
+        user.setUserPassword(encoder.encode(newPass));
+
+        return userSevice.saveOrUpdate(user);
+    }
+    @PutMapping("/changePass")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePass changePass) {
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User users = userSevice.findByID(userDetails.getUserId());
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+        boolean passChecker = bc.matches(changePass.getOldPassword(), users.getUserPassword());
+        if (passChecker) {
+            boolean checkDuplicate = bc.matches(changePass.getPassword(), users.getUserPassword());
+            if (checkDuplicate) {
+                return ResponseEntity.ok(new MessageResponse("The new password must be different from the old password !"));
+            } else {
+                users.setUserPassword(encoder.encode(changePass.getPassword()));
+                userSevice.saveOrUpdate(users);
+                return ResponseEntity.ok(new MessageResponse("Change password successfully !"));
+            }
+        } else {
+            return ResponseEntity.ok(new MessageResponse("Password does not match ! Change password fail"));
+        }
+    }
+
+
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest){
@@ -89,7 +137,7 @@ public class UserController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        User users = userSevice.findByEmail(customUserDetails.getUserEmail());
+        User users = userSevice.findByEmail(customUserDetails.getEmail());
         if(!customUserDetails.isUserStatus()){
             return ResponseEntity.ok("Your account have been block !");
         } else {
