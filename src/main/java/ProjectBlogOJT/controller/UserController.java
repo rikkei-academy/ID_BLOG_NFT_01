@@ -11,6 +11,7 @@ import ProjectBlogOJT.payload.request.SignupRequest;
 import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
+import ProjectBlogOJT.sendEmail.ProvideSendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +40,31 @@ public class UserController {
     private RoleService roleService;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private ProvideSendEmail provideSendEmail;
+
+    @GetMapping("/getToken")
+    public ResponseEntity<?> sendEmail(@RequestParam("email") String email) {
+        try {
+            String jwt = tokenProvider.generateTokenEmail(email);
+            provideSendEmail.sendSimpleMessage(email, "Token", jwt);
+            return ResponseEntity.ok("Send email successfully");
+        } catch (Exception e) {
+            return ResponseEntity.ok("Failed");
+        }
+    }
+
+    @PostMapping("/resetPass")
+    public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
+        String userName = tokenProvider.getUserNameFromJwt(token);
+        User user = userSevice.findByUserName(userName);
+        user.setUserPassword(encoder.encode(newPass));
+
+        return userSevice.saveOrUpdate(user);
+    }
+
+
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest){
