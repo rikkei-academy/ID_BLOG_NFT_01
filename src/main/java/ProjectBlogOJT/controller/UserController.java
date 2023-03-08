@@ -13,6 +13,7 @@ import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
 import ProjectBlogOJT.sendEmail.ProvideSendEmail;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/v1/auth")
 public class UserController {
+
     @Autowired
     private UserSevice userSevice;
     @Autowired
@@ -84,7 +87,17 @@ public class UserController {
             return ResponseEntity.ok(new MessageResponse("Password does not match ! Change password fail"));
         }
     }
+    @GetMapping("/logOut")
+    public ResponseEntity<?> logOut(HttpServletRequest request){
+        String authorizationHeader = request.getHeader("Authorization");
 
+
+        // Clear the authentication from server-side (in this case, Spring Security)
+        SecurityContextHolder.clearContext();
+
+        return ResponseEntity.ok("You have been logged out.");
+
+    }
 
 
 
