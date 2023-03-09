@@ -15,6 +15,10 @@ import ProjectBlogOJT.security.CustomUserDetails;
 import ProjectBlogOJT.sendEmail.ProvideSendEmail;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,9 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -172,6 +174,33 @@ public class UserController {
         List<User> listSearch = userSevice.searchByName(userName);
         return listSearch ;
     }
+
+    @GetMapping("/filter/{option}")
+    public List<User> listFilter(@PathVariable("option") Integer option){
+       return userSevice.listFilter(option);
+    }
+
+    @GetMapping("/sort")
+    public List<User> sortUser(@RequestParam("userName") String userName){
+        List<User> listSort = userSevice.sortByName(userName);
+        return  listSort;
+    }
+    @GetMapping("/getPagging")
+    public ResponseEntity<Map<String, Object>> getPagging(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> pageBook = userSevice.getPagging(pageable);
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", pageBook.getContent());
+        data.put("total", pageBook.getSize());
+        data.put("totalItems", pageBook.getTotalElements());
+        data.put("totalPages", pageBook.getTotalPages());
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+
+
 
 
 
