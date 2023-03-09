@@ -160,6 +160,13 @@ public class UserController {
             return ResponseEntity.ok(new JwtResponse(jwt, users.getUserID(), users.getUserName(), users.getUserEmail(), listRoles));
         }
     }
+    @PostMapping("/block/{userID}")
+    public ResponseEntity<?> blockUser(@PathVariable("userID") int userID) {
+        User userBlock = userSevice.findByID(userID);
+        userBlock.setUserStatus(false);
+        userSevice.saveOrUpdate(userBlock);
+        return ResponseEntity.ok("Block Successfully !");
+    }
 
 
 }
