@@ -26,7 +26,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date dateExpired = new Date(now.getTime() + JWT_EXPIRATION);
         //Tao chuoi JWT tu userName
-        return Jwts.builder().setSubject(users.getUserName())
+        return Jwts.builder().setSubject(users.getUserEmail())
                 .setIssuedAt(now)
                 .setExpiration(dateExpired)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET).compact();

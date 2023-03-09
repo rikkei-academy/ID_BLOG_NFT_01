@@ -20,6 +20,7 @@ public class CustomUserDetails implements UserDetails {
     @JsonIgnore
     private String password;
     private String email;
+    private String avatar;
 
     private boolean userStatus;
 
@@ -35,8 +36,9 @@ public class CustomUserDetails implements UserDetails {
         //Lay cac quyen tu doi tuong user
         List<GrantedAuthority> listAuthorities = user.getListRoles().stream().map(roles -> new SimpleGrantedAuthority(roles.getRoleName().name())).collect(Collectors.toList());
         //Tra ve doi tuong CustomUserDetails
-        return new CustomUserDetails(user.getUserID(), user.getUserName(), user.getUserPassword(), user.getUserEmail(), user.isUserStatus(), listAuthorities);
+        return new CustomUserDetails(user.getUserID(), user.getUserName(), user.getUserPassword(), user.getUserEmail(),user.getUserAvatar(), user.isUserStatus(), listAuthorities);
     }
+
 
     @Override
     public String getPassword() {
