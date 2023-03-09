@@ -9,12 +9,17 @@ import ProjectBlogOJT.model.service.UserSevice;
 import ProjectBlogOJT.payload.request.ChangePass;
 import ProjectBlogOJT.payload.request.LoginRequest;
 import ProjectBlogOJT.payload.request.SignupRequest;
+import ProjectBlogOJT.payload.request.UserUpdate;
 import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
 import ProjectBlogOJT.sendEmail.ProvideSendEmail;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,11 +34,13 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -178,12 +185,38 @@ public class UserController {
         return listSearch ;
     }
 
+
+    @GetMapping("/filter/{option}")
+    public List<User> listFilter(@PathVariable("option") Integer option){
+       return userSevice.listFilter(option);
+    }
+
+    @GetMapping("/sort")
+    public List<User> sortUser(@RequestParam("userName") String userName){
+        List<User> listSort = userSevice.sortByName(userName);
+        return  listSort;
+    }
+    @GetMapping("/getPagging")
+    public ResponseEntity<Map<String, Object>> getPagging(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> pageBook = userSevice.getPagging(pageable);
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", pageBook.getContent());
+        data.put("total", pageBook.getSize());
+        data.put("totalItems", pageBook.getTotalElements());
+        data.put("totalPages", pageBook.getTotalPages());
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
     @GetMapping("/login-Google")
     public RedirectView loginWithGoogle(){
         return new RedirectView("/oauth2/authorization/google");
     }
 
     @RequestMapping("/oauth2/success")
+
     public ResponseEntity<?> getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
         String avatar = oAuth2User.getAttribute("picture");
@@ -231,6 +264,42 @@ public class UserController {
             char randomChar = chars.charAt(index);
             sb.append(randomChar);
         }
+
+    public OAuth2User getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User principal){
+
+
+        return principal;
+    }
+
+    @PostMapping("/updateUser/{userID}")
+    public User updateUser(@PathVariable("userID") int userID, @RequestBody UserUpdate userUpdate){
+        User user = userSevice.findByID(userID);
+        Set<String> strRoles = userUpdate.getListRoles();
+        Set<Roles> listRoles = new HashSet<>();
+        if(strRoles == null){
+            Roles userRole = roleService.findByRoleName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+            listRoles.add(userRole);
+        }else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Roles adminRole = roleService.findByRoleName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(adminRole);
+                    case "moderator":
+                        Roles modRole = roleService.findByRoleName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(modRole);
+                    case "user":
+                        Roles userRole = roleService.findByRoleName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(userRole);
+                }
+            });
+        }
+        user.setListRoles(listRoles);
+        return userSevice.saveOrUpdate(user);
+    }
 
         return sb.toString();
     }

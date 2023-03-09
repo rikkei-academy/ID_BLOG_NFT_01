@@ -6,10 +6,12 @@ import ProjectBlogOJT.model.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,7 +65,33 @@ public class UserSeviceImp implements UserSevice {
     }
 
     @Override
+    public List<User> listFilter(Integer option) {
+        List<User> userList = userRepository.findAll();
+        List<User> listFilter = new ArrayList<>();
+        for (User users : userList ) {
+            if (users.getListRoles().size()==option){
+                listFilter.add(users);
+            }
+        }
+        return listFilter;
+    }
+
+    @Override
+    public List<User> sortByName(String directionName) {
+        if(directionName.equals("asc")){
+            return userRepository.findAll(Sort.by("userName"));
+        }else {
+            return  userRepository.findAll(Sort.by("userName").descending());
+        }
+    }
+
+    @Override
+    public Page<User> getPagging(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
     public Page<User> getPagination(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
+
 }
