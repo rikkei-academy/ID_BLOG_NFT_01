@@ -1,7 +1,6 @@
 package ProjectBlogOJT.controller;
 
 import ProjectBlogOJT.model.entity.Comment;
-import ProjectBlogOJT.model.entity.Product;
 import ProjectBlogOJT.model.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/v1/comment")
-public class CommentImp {
+public class CommentController {
     @Autowired
     CommentService commentService;
     @GetMapping()
