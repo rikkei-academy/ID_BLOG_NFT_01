@@ -77,7 +77,6 @@ public class UserController {
         String userName = tokenProvider.getUserNameFromJwt(token);
         User user = userSevice.findByUserName(userName);
         user.setUserPassword(encoder.encode(newPass));
-
         return userSevice.saveOrUpdate(user);
     }
     @PutMapping("/changePass")
@@ -216,7 +215,6 @@ public class UserController {
     }
 
     @RequestMapping("/oauth2/success")
-
     public ResponseEntity<?> getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
         String avatar = oAuth2User.getAttribute("picture");
@@ -252,7 +250,6 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
     }
-
     public String randomPassword(){
         int length = 10;
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -264,11 +261,7 @@ public class UserController {
             char randomChar = chars.charAt(index);
             sb.append(randomChar);
         }
-
-    public OAuth2User getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User principal){
-
-
-        return principal;
+        return sb.toString();
     }
 
     @PostMapping("/updateUser/{userID}")
@@ -299,8 +292,5 @@ public class UserController {
         }
         user.setListRoles(listRoles);
         return userSevice.saveOrUpdate(user);
-    }
-
-        return sb.toString();
     }
 }
