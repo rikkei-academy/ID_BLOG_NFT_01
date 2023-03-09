@@ -167,6 +167,11 @@ public class UserController {
         userSevice.saveOrUpdate(userBlock);
         return ResponseEntity.ok("Block Successfully !");
     }
+    @GetMapping("/searchUser/{userName}")
+    public List<User> listSearch(@PathVariable("userName") String userName){
+        List<User> listSearch = userSevice.searchByName(userName);
+        return listSearch ;
+    }
 
 
 }
