@@ -20,4 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         return CustomUserDetails.mapUserToUserDetail(user);
     }
+
+    public UserDetails loadUserByID(int userID){
+        User user = userRepository.findById(userID).get();
+        return CustomUserDetails.mapUserToUserDetail(user);
+    }
 }

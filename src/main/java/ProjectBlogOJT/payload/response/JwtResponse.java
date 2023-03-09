@@ -4,50 +4,28 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class JwtResponse {
     private int userId;
     private String token;
     private String type = "Bearer";
     private String userName;
+    private String userAvatar;
     private String email;
-    private String phone;
-    private String fullName;
-    private String address;
     private List<String> listRoles;
 
-    public JwtResponse(String token, Integer userId, String userName, String email, String phone, String fullName, String address, List<String> listRoles) {
+    public JwtResponse(int userId, String token, String type, String userName, String userAvatar, String email, List<String> listRoles) {
         this.userId = userId;
         this.token = token;
+        this.type = type;
         this.userName = userName;
+        this.userAvatar = userAvatar;
         this.email = email;
-        this.phone = phone;
-        this.fullName = fullName;
-        this.address = address;
-        this.listRoles = listRoles;
-
-    }
-
-    public JwtResponse(String token,Integer userId, String userName, String email, List<String> listRoles) {
-        this.userId = userId;
-        this.token = token;
-        this.userName = userName;
-        this.email = email;
-
         this.listRoles = listRoles;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public int getUserId() {
@@ -90,20 +68,12 @@ public class JwtResponse {
         this.email = email;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getUserAvatar() {
+        return userAvatar;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
     public List<String> getListRoles() {
