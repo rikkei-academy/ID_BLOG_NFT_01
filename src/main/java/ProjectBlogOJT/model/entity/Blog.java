@@ -36,5 +36,7 @@ public class Blog {
     @JoinTable(name= "Blog_Tag", joinColumns = @JoinColumn(name = "blogID"),
             inverseJoinColumns = @JoinColumn(name="tagID"))
     private Set<Tag> listTag = new HashSet<>();
+    @OneToMany(mappedBy = "blog")
+    private List<Comment> commentList;
 
 }
