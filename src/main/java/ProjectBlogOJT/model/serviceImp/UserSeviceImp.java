@@ -56,12 +56,12 @@ public class UserSeviceImp implements UserSevice {
 
     @Override
     public boolean existsByUserName(String userName) {
-        return false;
+        return userRepository.existsByUserName(userName);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return userRepository.existsByUserEmail(email);
     }
 
     @Override
