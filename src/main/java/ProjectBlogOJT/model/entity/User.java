@@ -3,7 +3,9 @@ package ProjectBlogOJT.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,5 +33,14 @@ public class User {
     @JoinTable(name= "User_Role", joinColumns = @JoinColumn(name = "userID"),
     inverseJoinColumns = @JoinColumn(name="RoleId"))
     private Set<Roles> listRoles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name= "Likes", joinColumns = @JoinColumn(name = "userID"),
+            inverseJoinColumns = @JoinColumn(name="blogID"))
+    private List<Blog> listTag = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<History> listHistory;
+
 
 }

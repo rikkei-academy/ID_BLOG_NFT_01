@@ -9,6 +9,7 @@ import ProjectBlogOJT.model.service.UserSevice;
 import ProjectBlogOJT.payload.request.ChangePass;
 import ProjectBlogOJT.payload.request.LoginRequest;
 import ProjectBlogOJT.payload.request.SignupRequest;
+import ProjectBlogOJT.payload.request.UserUpdate;
 import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
@@ -33,6 +34,12 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
+
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -149,14 +156,14 @@ public class UserController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        User users = userSevice.findByEmail(customUserDetails.getEmail());
+        User users = userSevice.findByUserName(customUserDetails.getUsername());
         if(!customUserDetails.isUserStatus()){
             return ResponseEntity.ok("Your account have been block !");
         } else {
             String jwt = tokenProvider.generateToken(customUserDetails);
             List<String> listRoles = customUserDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority()).collect(Collectors.toList());
-            return ResponseEntity.ok(new JwtResponse(jwt, users.getUserID(), users.getUserName(), users.getUserEmail(), listRoles));
+            return ResponseEntity.ok(new JwtResponse(users.getUserID(), jwt,"Bearer",users.getUserName(),users.getUserAvatar(),users.getUserEmail(),listRoles));
         }
     }
     @PostMapping("/block/{userID}")
@@ -203,19 +210,95 @@ public class UserController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-
-
-
-
     @GetMapping("/login-Google")
     public RedirectView loginWithGoogle(){
         return new RedirectView("/oauth2/authorization/google");
     }
 
     @RequestMapping("/oauth2/success")
+
+    public ResponseEntity<?> getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        String email = oAuth2User.getAttribute("email");
+        String avatar = oAuth2User.getAttribute("picture");
+        String userName = oAuth2User.getAttribute("name");
+        if (userSevice.existsByEmail(email)) {
+            User user = userSevice.findByEmail(email);
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(user.getUserName(),user.getUserPassword())
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+//            if(!customUserDetails.isUserStatus()){
+//                return ResponseEntity.ok("Your account have been block !");
+//            } else {
+//                String jwt = tokenProvider.generateToken(customUserDetails);
+//                List<String> listRoles = customUserDetails.getAuthorities().stream()
+//                        .map(item -> item.getAuthority()).collect(Collectors.toList());
+//                return ResponseEntity.ok(new JwtResponse(user.getUserID(), jwt,"Bearer",user.getUserName(),user.getUserAvatar(),user.getUserEmail(),listRoles));
+//            }
+            return ResponseEntity.ok(user);
+        } else {
+            User user = new User();
+            user.setUserName(userName);
+            user.setUserPassword(encoder.encode(randomPassword()));
+            user.setUserEmail(email);
+            user.setUserAvatar(avatar);
+            user.setUserStatus(true);
+            Set<Roles> listRoles = new HashSet<>();
+            Roles userRole = roleService.findByRoleName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+            listRoles.add(userRole);
+            user.setListRoles(listRoles);
+            userSevice.saveOrUpdate(user);
+            return ResponseEntity.ok(user);
+        }
+    }
+
+    public String randomPassword(){
+        int length = 10;
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(chars.length());
+            char randomChar = chars.charAt(index);
+            sb.append(randomChar);
+        }
+
     public OAuth2User getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User principal){
         return principal;
     }
 
+    @PostMapping("/updateUser/{userID}")
+    public User updateUser(@PathVariable("userID") int userID, @RequestBody UserUpdate userUpdate){
+        User user = userSevice.findByID(userID);
+        Set<String> strRoles = userUpdate.getListRoles();
+        Set<Roles> listRoles = new HashSet<>();
+        if(strRoles == null){
+            Roles userRole = roleService.findByRoleName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+            listRoles.add(userRole);
+        }else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Roles adminRole = roleService.findByRoleName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(adminRole);
+                    case "moderator":
+                        Roles modRole = roleService.findByRoleName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(modRole);
+                    case "user":
+                        Roles userRole = roleService.findByRoleName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(userRole);
+                }
+            });
+        }
+        user.setListRoles(listRoles);
+        return userSevice.saveOrUpdate(user);
+    }
 
+        return sb.toString();
+    }
 }
