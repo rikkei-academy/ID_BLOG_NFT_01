@@ -20,13 +20,26 @@ public class CommentImp {
         return commentList;
     }
     @PostMapping("/delete/{commentID}")
-    public Product delete(@PathVariable("commentID") int commentID) {
+    public Comment delete(@PathVariable("commentID") int commentID) {
         Comment comment = commentService.findByID(commentID);
-        if (comment.isProductStatus() == true) {
-            product.setProductStatus(false);
+        if (comment.isCommentStatus() == true) {
+            comment.setCommentStatus(false);
         } else {
-            product.setProductStatus(true);
+            comment.setCommentStatus(true);
         }
-        return productSevice.saveOrUpdate(product);
+        return commentService.saveOrUpdate(comment);
+    }
+    @PostMapping
+    public Comment createComment(@RequestBody Comment comment) {
+        Comment commentCreate = commentService.save(comment);
+        return commentCreate;
+    }
+
+    @PutMapping("/update/{commentID}")
+    public Comment updateComment(@PathVariable("commentID") int commentID, @RequestBody Comment comment) {
+        Comment commentUpdate = commentService.findByID(commentID);
+        commentUpdate.setCommentContent(comment.getCommentContent());
+        commentUpdate.setCommentDate(java.time.LocalDate.now());
+        return commentService.saveOrUpdate(commentUpdate);
     }
 }

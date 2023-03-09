@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -19,12 +20,11 @@ public class Comment {
     @Column(name = "commentID")
     private int commentID;
     @Column(name = "commentDate")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date commentDate;
+    private LocalDate commentDate;
     @Column(name = "commentContent")
     private String commentContent;
     @Column(name = "commentStatus")
-    private Boolean commentStatus;
+    private boolean commentStatus;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blogID")
