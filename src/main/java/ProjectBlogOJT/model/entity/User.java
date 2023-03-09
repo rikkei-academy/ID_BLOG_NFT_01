@@ -41,6 +41,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<History> listHistory;
+    @OneToMany(mappedBy = "user")
+    private List<Comment> listComment;
 
 
 }
