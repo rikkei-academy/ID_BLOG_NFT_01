@@ -88,25 +88,19 @@ public class UserController {
         }
     }
     @GetMapping("/logOut")
-    public ResponseEntity<?> logOut(HttpServletRequest request){
+    public ResponseEntity<?> logOut(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-
-
         // Clear the authentication from server-side (in this case, Spring Security)
         SecurityContextHolder.clearContext();
-
         return ResponseEntity.ok("You have been logged out.");
-
     }
 
-
-
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest){
-        if(userSevice.existsByUserName(signupRequest.getUserName())){
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
+        if (userSevice.existsByUserName(signupRequest.getUserName())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Usermame is already"));
         }
-        if (userSevice.existsByEmail(signupRequest.getEmail())){
+        if (userSevice.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already"));
 
         }
@@ -117,10 +111,10 @@ public class UserController {
         users.setUserStatus(true);
         Set<String> strRoles = signupRequest.getListRoles();
         Set<Roles> listRoles = new HashSet<>();
-        if(strRoles == null){
+        if (strRoles == null) {
             Roles userRole = roleService.findByRoleName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found"));
             listRoles.add(userRole);
-        }else {
+        } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
@@ -144,14 +138,14 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         User users = userSevice.findByEmail(customUserDetails.getEmail());
-        if(!customUserDetails.isUserStatus()){
+        if (!customUserDetails.isUserStatus()) {
             return ResponseEntity.ok("Your account have been block !");
         } else {
             String jwt = tokenProvider.generateToken(customUserDetails);
@@ -167,6 +161,19 @@ public class UserController {
         userSevice.saveOrUpdate(userBlock);
         return ResponseEntity.ok("Block Successfully !");
     }
+    @GetMapping()
+    public List<User> readUser(){
+        List<User> userList = userSevice.findAll();
+        return userList;
+    }
+
+    @GetMapping("/searchUser/{userName}")
+    public List<User> listSearch(@PathVariable("userName") String userName){
+        List<User> listSearch = userSevice.searchByName(userName);
+        return listSearch ;
+    }
+
+
 
 
 }
