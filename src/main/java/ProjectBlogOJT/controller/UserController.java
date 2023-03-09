@@ -214,8 +214,6 @@ public class UserController {
 
     @RequestMapping("/oauth2/success")
     public OAuth2User getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User principal){
-
-
         return principal;
     }
 
