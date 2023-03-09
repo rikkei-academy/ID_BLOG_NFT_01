@@ -42,7 +42,7 @@ public class UserSeviceImp implements UserSevice {
 
     @Override
     public List<User> searchByName(String userName) {
-        return null;
+        return userRepository.findUserByUserNameContaining(userName);
     }
 
     @Override
