@@ -9,6 +9,7 @@ import ProjectBlogOJT.model.service.UserSevice;
 import ProjectBlogOJT.payload.request.ChangePass;
 import ProjectBlogOJT.payload.request.LoginRequest;
 import ProjectBlogOJT.payload.request.SignupRequest;
+import ProjectBlogOJT.payload.request.UserUpdate;
 import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
@@ -203,10 +204,6 @@ public class UserController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-
-
-
-
     @GetMapping("/login-Google")
     public RedirectView loginWithGoogle(){
         return new RedirectView("/oauth2/authorization/google");
@@ -217,6 +214,36 @@ public class UserController {
 
 
         return principal;
+    }
+
+    @PostMapping("/updateUser/{userID}")
+    public User updateUser(@PathVariable("userID") int userID, @RequestBody UserUpdate userUpdate){
+        User user = userSevice.findByID(userID);
+        Set<String> strRoles = userUpdate.getListRoles();
+        Set<Roles> listRoles = new HashSet<>();
+        if(strRoles == null){
+            Roles userRole = roleService.findByRoleName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+            listRoles.add(userRole);
+        }else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Roles adminRole = roleService.findByRoleName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(adminRole);
+                    case "moderator":
+                        Roles modRole = roleService.findByRoleName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(modRole);
+                    case "user":
+                        Roles userRole = roleService.findByRoleName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        listRoles.add(userRole);
+                }
+            });
+        }
+        user.setListRoles(listRoles);
+        return userSevice.saveOrUpdate(user);
     }
 
 
