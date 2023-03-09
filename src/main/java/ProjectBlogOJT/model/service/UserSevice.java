@@ -25,8 +25,12 @@ public interface UserSevice {
 
     boolean existsByEmail(String email);
 
+
     List<User> listFilter(Integer option);
     List<User> sortByName(String directionName);
     Page<User> getPagging(Pageable pageable);
+
+
+    Page<User> getPagination(Pageable pageable);
 
 }

@@ -90,4 +90,8 @@ public class UserSeviceImp implements UserSevice {
         return userRepository.findAll(pageable);
     }
 
+    public Page<User> getPagination(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
 }

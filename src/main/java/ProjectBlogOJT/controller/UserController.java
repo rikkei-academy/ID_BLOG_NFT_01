@@ -23,19 +23,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/v1/auth")
 public class UserController {
 
     @Autowired
@@ -147,7 +150,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         User users = userSevice.findByEmail(customUserDetails.getEmail());
-        if (!customUserDetails.isUserStatus()) {
+        if(!customUserDetails.isUserStatus()){
             return ResponseEntity.ok("Your account have been block !");
         } else {
             String jwt = tokenProvider.generateToken(customUserDetails);
@@ -174,6 +177,7 @@ public class UserController {
         List<User> listSearch = userSevice.searchByName(userName);
         return listSearch ;
     }
+
 
     @GetMapping("/filter/{option}")
     public List<User> listFilter(@PathVariable("option") Integer option){
@@ -203,6 +207,17 @@ public class UserController {
 
 
 
+    @GetMapping("/login-Google")
+    public RedirectView loginWithGoogle(){
+        return new RedirectView("/oauth2/authorization/google");
+    }
+
+    @RequestMapping("/oauth2/success")
+    public OAuth2User getEmailLoginGoogle(@AuthenticationPrincipal OAuth2User principal){
+
+
+        return principal;
+    }
 
 
 }
