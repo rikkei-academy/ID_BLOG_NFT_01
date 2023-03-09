@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Data
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -33,19 +34,10 @@ public class CustomUserDetails implements UserDetails {
     //Tu thong tin user chuyen sang thong tin CustomUserDetails
     public static CustomUserDetails mapUserToUserDetail(User user) {
         //Lay cac quyen tu doi tuong user
-        List<GrantedAuthority> listAuthorities = user.getListRoles().stream()
-                .map(roles -> new SimpleGrantedAuthority(roles.getRoleName().name()))
-                .collect(Collectors.toList());
-        //Tra ve doi tuong CustomUserDetails
-        return new CustomUserDetails(
-                user.getUserID(),
-                user.getUserName(),
-                user.getUserPassword(),
-                user.getUserEmail(),
-                user.isUserStatus(),
-                listAuthorities
-        );
 
+        List<GrantedAuthority> listAuthorities = user.getListRoles().stream().map(roles -> new SimpleGrantedAuthority(roles.getRoleName().name())).collect(Collectors.toList());
+        //Tra ve doi tuong CustomUserDetails
+        return new CustomUserDetails(user.getUserID(), user.getUserName(), user.getUserPassword(), user.getUserEmail(), user.isUserStatus(), listAuthorities);
     }
 
     @Override
@@ -77,6 +69,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 }

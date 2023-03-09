@@ -4,6 +4,8 @@ import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.repository.UserRepository;
 import ProjectBlogOJT.model.service.UserSevice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -58,5 +60,10 @@ public class UserSeviceImp implements UserSevice {
     @Override
     public boolean existsByEmail(String email) {
         return false;
+    }
+
+    @Override
+    public Page<User> getPagination(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }

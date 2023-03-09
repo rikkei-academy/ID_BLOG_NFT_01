@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/v1/auth")
 public class UserController {
 
     @Autowired
@@ -145,7 +145,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         User users = userSevice.findByEmail(customUserDetails.getEmail());
-        if (!customUserDetails.isUserStatus()) {
+        if(!customUserDetails.isUserStatus()){
             return ResponseEntity.ok("Your account have been block !");
         } else {
             String jwt = tokenProvider.generateToken(customUserDetails);
@@ -172,6 +172,8 @@ public class UserController {
         List<User> listSearch = userSevice.searchByName(userName);
         return listSearch ;
     }
+
+
 
 
 
