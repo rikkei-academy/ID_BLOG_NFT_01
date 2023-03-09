@@ -15,6 +15,4 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentID")
     private int commentID;
-
-
 }
