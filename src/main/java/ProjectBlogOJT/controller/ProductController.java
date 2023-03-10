@@ -3,9 +3,16 @@ package ProjectBlogOJT.controller;
 import ProjectBlogOJT.model.entity.Product;
 import ProjectBlogOJT.model.service.ProductSevice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -54,6 +61,29 @@ public class ProductController {
         productUpdate.setProductImage(product.getProductImage());
         return productSevice.saveOrUpdate(productUpdate);
     }
+    @GetMapping("/getPagging")
+    public ResponseEntity<Map<String, Object>> getPagging(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> pageBook = productSevice.getPagging(pageable);
+
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("product", pageBook.getContent());
+        data.put("total", pageBook.getSize());
+        data.put("totalItems", pageBook.getTotalElements());
+        data.put("totalPages", pageBook.getTotalPages());
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+    @GetMapping("/sortByPrice")
+    public ResponseEntity<List<Product>> sortBookByNameAndPrice(@RequestParam("directionPrice") String directionPrice) {
+        List<Product> productList = productSevice.sortByPrice(directionPrice);
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
+
+
 
 
 }
