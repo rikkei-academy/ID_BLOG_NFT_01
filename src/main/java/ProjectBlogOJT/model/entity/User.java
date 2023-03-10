@@ -1,5 +1,6 @@
 package ProjectBlogOJT.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -41,6 +42,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<History> listHistory;
+
     @OneToMany(mappedBy = "user")
     private List<Comment> listComment;
 

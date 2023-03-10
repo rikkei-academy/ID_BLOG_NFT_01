@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-  List<Product> findProductByProductNameContaining(String productName);
+  List<Product> findProductByProductNameContainingAndProductPriceBetween(String productName,int min, int max);
   List<Product> findProductByProductPrice(Integer price);
+
 
 }

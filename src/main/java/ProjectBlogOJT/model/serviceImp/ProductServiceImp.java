@@ -42,10 +42,9 @@ public class ProductServiceImp implements ProductSevice {
     }
 
     @Override
-    public List<Product> searchByName(String productName) {
-        return productRepository.findProductByProductNameContaining(productName);
+    public List<Product> searchByName(String productName, Integer min, Integer max) {
+        return productRepository.findProductByProductNameContainingAndProductPriceBetween(productName,min,max);
     }
-
     @Override
     public List<Product> searchByPrice(int price) {
         return productRepository.findProductByProductPrice(price);

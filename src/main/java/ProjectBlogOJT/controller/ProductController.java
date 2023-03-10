@@ -28,8 +28,10 @@ public class ProductController {
     }
 
     @GetMapping("/searchProduct/{productName}")
-    public List<Product> searchByProductName(@PathVariable("productName") String productName) {
-        List<Product> productCreat = productSevice.searchByName(productName);
+    public List<Product> searchByProductName(@PathVariable("productName") String productName,
+                                             @PathVariable("productName") Integer min,
+                                             @PathVariable("productName") Integer max) {
+        List<Product> productCreat = productSevice.searchByName(productName,min,max);
         return productCreat;
     }
 
