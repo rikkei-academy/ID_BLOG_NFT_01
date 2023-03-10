@@ -1,11 +1,15 @@
 package ProjectBlogOJT.model.serviceImp;
 
+import ProjectBlogOJT.model.entity.Comment;
 import ProjectBlogOJT.model.entity.Exhibition;
 import ProjectBlogOJT.model.repository.ExhibitionRepository;
 import ProjectBlogOJT.model.service.ExhibitionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,5 +42,11 @@ public class ExhibitionServiceImp implements ExhibitionService {
     @Override
     public void delete(int exhibitionID) {
         exhibitionRepository.deleteById(exhibitionID);
+    }
+
+    @Override
+    public Page<Exhibition> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {
+        Page<Exhibition> exhibitionPage =  exhibitionRepository.findExhibitionByExhibitionCreatedDate(from,to,pageable);
+        return exhibitionPage;
     }
 }

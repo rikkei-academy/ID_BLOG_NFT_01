@@ -43,11 +43,7 @@ public class CommentServiceImp implements CommentService {
 
     @Override
     public Page<Comment> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {
-//        if (direction.equals("asc")) {
-//            return  commentRepository.findCommentByCommentDateBetween(from,to,Sort.by("commentDate"),pageable);
-//        } else {
-//            return  commentRepository.findCommentByCommentDateBetween(from,to,Sort.by("").descending(),pageable);
-//        }
+
       Page<Comment> commentList =  commentRepository.findCommentByCommentDateBetween(from,to,pageable);
         return commentList;
     }

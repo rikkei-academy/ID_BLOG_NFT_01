@@ -75,10 +75,8 @@ public class CommentController {
                                                            @RequestParam String to,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam String direction){
-
         LocalDate fromDate = LocalDate.parse(form);
         LocalDate toDate = LocalDate.parse(to);
-
         Sort.Order order;
         if (direction.equals("asc")){
             order=new Sort.Order(Sort.Direction.ASC,"commentDate");
