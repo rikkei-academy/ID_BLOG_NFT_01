@@ -75,7 +75,7 @@ public class UserController {
     @PostMapping("/resetPass")
     public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
         String userName = tokenProvider.getUserNameFromJwt(token);
-        User user = userSevice.findByUserName(userName);
+        User user = userSevice.findByEmail(userName);
         user.setUserPassword(encoder.encode(newPass));
         return userSevice.saveOrUpdate(user);
     }
