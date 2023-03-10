@@ -4,6 +4,7 @@ import ProjectBlogOJT.model.entity.Blog;
 import ProjectBlogOJT.model.repository.BlogRepository;
 import ProjectBlogOJT.model.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class BlogServiceImp implements BlogService {
 
     @Override
     public List<Blog> findAll() {
+
         return blogRepository.findAll();
     }
 
@@ -36,4 +38,16 @@ public class BlogServiceImp implements BlogService {
     public List<Blog> searchByTitle(String blogTitle) {
         return blogRepository.findByBlogTitleContaining(blogTitle);
     }
+
+    @Override
+    public List<Blog> sortByCreatedDate(String direction) {
+
+        if(direction.equals("asc")){
+            return blogRepository.findAll(Sort.by("blogCreateDate").ascending());
+        }else {
+            return blogRepository.findAll(Sort.by("blogCreateDate").descending());
+        }
+    }
+
+
 }

@@ -75,7 +75,7 @@ public class UserController {
     @PostMapping("/resetPass")
     public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
         String userName = tokenProvider.getUserNameFromJwt(token);
-        User user = userSevice.findByUserName(userName);
+        User user = userSevice.findByEmail(userName);
         user.setUserPassword(encoder.encode(newPass));
         return userSevice.saveOrUpdate(user);
     }
@@ -105,7 +105,7 @@ public class UserController {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok("You have been logged out.");
     }
-
+    @PermitAll
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
         if (userSevice.existsByUserName(signupRequest.getUserName())) {
@@ -147,7 +147,7 @@ public class UserController {
         userSevice.saveOrUpdate(users);
         return ResponseEntity.ok(users);
     }
-
+    @PermitAll
     @PostMapping("/signin")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
