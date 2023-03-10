@@ -1,6 +1,7 @@
 package ProjectBlogOJT.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,9 +28,12 @@ public class Blog {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date blogCreateDate;
     @ManyToOne
+    @JsonIgnore
+
     @JoinColumn(name = "UserCreatedID")
     private User userCreated;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "UserAuthorizedID")
     private User userAuthorized;
     @ManyToMany(fetch = FetchType.LAZY)

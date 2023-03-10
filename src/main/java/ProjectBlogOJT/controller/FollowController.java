@@ -1,8 +1,6 @@
 package ProjectBlogOJT.controller;
 
 import ProjectBlogOJT.model.entity.Exhibition;
-import ProjectBlogOJT.model.service.HistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,13 +13,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/v1/history")
-public class HistoryController {
-    @Autowired
-    HistoryService historyService;
+@RequestMapping("/api/v1/exhibition")
+public class FollowController {
     @GetMapping()
     public List<Exhibition> exhibitionsList() {
         List<Exhibition> exhibitions = exhibitionService.findAll();
@@ -72,5 +67,4 @@ public class HistoryController {
         data.put("totalPages", pageComment.getTotalPages());
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
-
 }

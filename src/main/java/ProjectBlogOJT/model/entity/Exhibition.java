@@ -31,7 +31,7 @@ public class Exhibition {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date exhibitionExpiredDate;
     @Column(name = "exhibitionStatus")
-    private Boolean exhibitionStatus;
+    private boolean exhibitionStatus;
     @ManyToOne
     @JoinColumn(name = "Product")
     private Product product;
