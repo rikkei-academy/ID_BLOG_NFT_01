@@ -1,7 +1,7 @@
 package ProjectBlogOJT.jwt;
 import ProjectBlogOJT.model.entity.User;
 import io.jsonwebtoken.*;
-import ProjectBlogOJT.model.service.UserSevice;
+import ProjectBlogOJT.model.service.UserService;
 import ProjectBlogOJT.security.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.Date;
 @Slf4j
 public class JwtTokenProvider {
     @Autowired
-    private UserSevice userService;
+    private UserService userService;
     @Value("${ra.jwt.secret}")
     private String JWT_SECRET;
     @Value(("${ra.jwt.expiration}"))

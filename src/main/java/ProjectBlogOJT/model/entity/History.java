@@ -23,15 +23,15 @@ public class History {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "historyID")
     private int historyID;
+
     @Column(name = "historyDataTime")
-    @JsonFormat(pattern = "YYYY-MM-DDTHH:mm:ss.sssZ")
     private Date historyDataTime;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "productID")
     private Product product;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
 }

@@ -8,25 +8,27 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Following")
+@Table(name = "Likes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class Following {
+public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "followID")
-    private int followID;
+    @Column(name = "likeID")
+    private int likeID;
 
-    @Column(name = "followingUserID")
-    private int followingUser;
-
-    @Column(name = "followStatus")
-    private int followStatus;
+    @Column(name = "likeStatus")
+    private boolean likeStatus;
 
     @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "blogID")
+    private Blog blog;
+
+
 }

@@ -5,7 +5,7 @@ import ProjectBlogOJT.model.entity.ERole;
 import ProjectBlogOJT.model.entity.Roles;
 import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.service.RoleService;
-import ProjectBlogOJT.model.service.UserSevice;
+import ProjectBlogOJT.model.service.UserService;
 import ProjectBlogOJT.payload.request.ChangePass;
 import ProjectBlogOJT.payload.request.LoginRequest;
 import ProjectBlogOJT.payload.request.SignupRequest;
@@ -14,7 +14,6 @@ import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
 import ProjectBlogOJT.security.CustomUserDetails;
 import ProjectBlogOJT.sendEmail.ProvideSendEmail;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +34,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -49,7 +47,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserSevice userSevice;
+    private UserService userService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -75,14 +73,15 @@ public class UserController {
     @PostMapping("/resetPass")
     public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
         String userName = tokenProvider.getUserNameFromJwt(token);
-        User user = userSevice.findByEmail(userName);
+        User user = userService.findByEmail(userName);
+
         user.setUserPassword(encoder.encode(newPass));
-        return userSevice.saveOrUpdate(user);
+        return userService.saveOrUpdate(user);
     }
     @PutMapping("/changePass")
     public ResponseEntity<?> changePassword(@RequestBody ChangePass changePass) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User users = userSevice.findByID(userDetails.getUserId());
+        User users = userService.findByID(userDetails.getUserId());
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
         boolean passChecker = bc.matches(changePass.getOldPassword(), users.getUserPassword());
         if (passChecker) {
@@ -91,7 +90,7 @@ public class UserController {
                 return ResponseEntity.ok(new MessageResponse("The new password must be different from the old password !"));
             } else {
                 users.setUserPassword(encoder.encode(changePass.getPassword()));
-                userSevice.saveOrUpdate(users);
+                userService.saveOrUpdate(users);
                 return ResponseEntity.ok(new MessageResponse("Change password successfully !"));
             }
         } else {
@@ -105,20 +104,20 @@ public class UserController {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok("You have been logged out.");
     }
-
+    @PermitAll
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signupRequest) {
-        if (userSevice.existsByUserName(signupRequest.getUserName())) {
+        if (userService.existsByUserName(signupRequest.getUserName())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Usermame is already"));
         }
-        if (userSevice.existsByEmail(signupRequest.getEmail())) {
+        if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already"));
-
         }
         User users = new User();
         users.setUserName(signupRequest.getUserName());
         users.setUserPassword(encoder.encode(signupRequest.getPassword()));
         users.setUserEmail(signupRequest.getEmail());
+        users.setUserFullName(signupRequest.getFullName());
         users.setUserStatus(true);
         Set<String> strRoles = signupRequest.getListRoles();
         Set<Roles> listRoles = new HashSet<>();
@@ -143,11 +142,11 @@ public class UserController {
                 }
             });
         }
-        users.setListRoles(listRoles);
-        userSevice.saveOrUpdate(users);
+        users   .setListRoles(listRoles);
+        userService.saveOrUpdate(users);
         return ResponseEntity.ok(users);
     }
-
+    @PermitAll
     @PostMapping("/signin")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -155,7 +154,7 @@ public class UserController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        User users = userSevice.findByUserName(customUserDetails.getUsername());
+        User users = userService.findByUserName(customUserDetails.getUsername());
         if(!customUserDetails.isUserStatus()){
             return ResponseEntity.ok("Your account have been block !");
         } else {
@@ -167,32 +166,32 @@ public class UserController {
     }
     @PostMapping("/block/{userID}")
     public ResponseEntity<?> blockUser(@PathVariable("userID") int userID) {
-        User userBlock = userSevice.findByID(userID);
+        User userBlock = userService.findByID(userID);
         userBlock.setUserStatus(false);
-        userSevice.saveOrUpdate(userBlock);
+        userService.saveOrUpdate(userBlock);
         return ResponseEntity.ok("Block Successfully !");
     }
     @GetMapping()
     public List<User> readUser(){
-        List<User> userList = userSevice.findAll();
+        List<User> userList = userService.findAll();
         return userList;
     }
 
     @GetMapping("/searchUser/{userName}")
     public List<User> listSearch(@PathVariable("userName") String userName){
-        List<User> listSearch = userSevice.searchByName(userName);
-        return listSearch ;
+        List<User> listSearch = userService.searchByName(userName);
+        return listSearch;
     }
 
 
     @GetMapping("/filter/{option}")
     public List<User> listFilter(@PathVariable("option") Integer option){
-       return userSevice.listFilter(option);
+       return userService.listFilter(option);
     }
 
     @GetMapping("/sort")
     public List<User> sortUser(@RequestParam("userName") String userName){
-        List<User> listSort = userSevice.sortByName(userName);
+        List<User> listSort = userService.sortByName(userName);
         return  listSort;
     }
     @GetMapping("/getPagging")
@@ -200,7 +199,7 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> pageBook = userSevice.getPagging(pageable);
+        Page<User> pageBook = userService.getPagging(pageable);
         Map<String, Object> data = new HashMap<>();
         data.put("user", pageBook.getContent());
         data.put("total", pageBook.getSize());
@@ -219,8 +218,9 @@ public class UserController {
         String email = oAuth2User.getAttribute("email");
         String avatar = oAuth2User.getAttribute("picture");
         String userName = oAuth2User.getAttribute("name");
-        if (userSevice.existsByEmail(email)) {
-                User user = userSevice.findByEmail(email);
+        if (userService.existsByEmail(email)) {
+                User user = userService.findByEmail(email);
+
                 String jwt = tokenProvider.generateTokenEmail(email);
                 List<String> listRole = new ArrayList<>();
                 listRole.add("ROLE_USER");
@@ -228,6 +228,7 @@ public class UserController {
         } else {
             User user = new User();
             user.setUserName(userName);
+            user.setUserFullName(userName);
             user.setUserPassword(encoder.encode(randomPassword()));
             user.setUserEmail(email);
             user.setUserAvatar(avatar);
@@ -236,7 +237,7 @@ public class UserController {
             Roles userRole = roleService.findByRoleName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found"));
             listRoles.add(userRole);
             user.setListRoles(listRoles);
-            userSevice.saveOrUpdate(user);
+            userService.saveOrUpdate(user);
             return ResponseEntity.ok(user);
         }
     }
@@ -256,7 +257,7 @@ public class UserController {
 
     @PostMapping("/updateUser/{userID}")
     public User updateUser(@PathVariable("userID") int userID, @RequestBody UserUpdate userUpdate){
-        User user = userSevice.findByID(userID);
+        User user = userService.findByID(userID);
         Set<String> strRoles = userUpdate.getListRoles();
         Set<Roles> listRoles = new HashSet<>();
         if(strRoles == null){
@@ -281,6 +282,6 @@ public class UserController {
             });
         }
         user.setListRoles(listRoles);
-        return userSevice.saveOrUpdate(user);
+        return userService.saveOrUpdate(user);
     }
 }

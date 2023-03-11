@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface UserSevice {
+public interface UserService {
     List<User> findAll();
 
     User findByEmail(String email);
@@ -25,12 +25,11 @@ public interface UserSevice {
 
     boolean existsByEmail(String email);
 
-
     List<User> listFilter(Integer option);
+
     List<User> sortByName(String directionName);
+
     Page<User> getPagging(Pageable pageable);
 
-
-    Page<User> getPagination(Pageable pageable);
-
+    List<User> findByFullName(String fullName);
 }

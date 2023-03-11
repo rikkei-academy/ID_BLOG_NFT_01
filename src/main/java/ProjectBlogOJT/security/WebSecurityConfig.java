@@ -4,6 +4,7 @@ import ProjectBlogOJT.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,13 +12,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -56,20 +56,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors() // Ngăn chặn request từ một domain khác
+        http.cors()
                 .and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/api/v1/**").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
-// Cho phép tất cả mọi người truy cập vào địa chỉ này
-                .anyRequest().authenticated()// Tất cả các request khác đều cần phải xác thực mới được truy cập
+                .antMatchers("/api/v1/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
-                .defaultSuccessUrl("/api/v1/auth/oauth2/success") // redirect to this url after successful login
+                .defaultSuccessUrl("/api/v1/auth/oauth2/success")
                 .userInfoEndpoint()
-                .userService(oAuth2UserService()); // customize the user info returned by Google
-        // Thêm một lớp Filter kiểm tra jwt
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .userService(oAuth2UserService())
+                .and().and()
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling().authenticationEntryPoint((req, res, e) -> {
+                    if (e instanceof AuthenticationException) {
+                        res.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+                    } else {
+                        res.sendError(HttpStatus.FORBIDDEN.value(), "You don't have permission to access this resource");
+                    }
+                });
     }
 
     @Bean
