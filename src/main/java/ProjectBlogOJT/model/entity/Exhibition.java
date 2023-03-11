@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -31,12 +32,10 @@ public class Exhibition {
     private String exhibitionDescription;
 
     @Column(name = "exhibitionCreatedDate")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date exhibitionCreatedDate;
+    private LocalDate exhibitionCreatedDate;
 
     @Column(name = "exhibitionExpiredDate")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date exhibitionExpiredDate;
+    private LocalDate exhibitionExpiredDate;
 
     @Column(name = "exhibitionStatus")
     private boolean exhibitionStatus;

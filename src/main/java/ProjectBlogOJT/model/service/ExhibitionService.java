@@ -15,6 +15,7 @@ public interface ExhibitionService {
     Exhibition save(Exhibition exhibition);
     Exhibition saveOrUpdate(Exhibition exhibition);
     void delete(int exhibitionID);
+    List<Exhibition> sortByDateCreate(String direction);
     Page<Exhibition> sortBetween(LocalDate from, LocalDate to, Pageable pageable);
 
 }

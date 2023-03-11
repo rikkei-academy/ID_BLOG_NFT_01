@@ -1,8 +1,8 @@
 package ProjectBlogOJT.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.*;
@@ -50,6 +50,7 @@ public class Product {
     private List<Tag> listTag;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "exhibitionID")
     private Exhibition exhibition;
 
