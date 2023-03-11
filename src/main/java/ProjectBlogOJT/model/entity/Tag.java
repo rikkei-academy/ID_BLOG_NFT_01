@@ -20,7 +20,6 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tagID")
     private int tagID;
-
     @Column(name="tagName")
     private String tagName;
     @Column(name="tagStatus")

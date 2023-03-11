@@ -59,14 +59,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors() // Ngăn chặn request từ một domain khác
                 .and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/**").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
-                .antMatchers("/api/v1/**").permitAll()
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/**").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
+// Cho phép tất cả mọi người truy cập vào địa chỉ này
                 .anyRequest().authenticated()// Tất cả các request khác đều cần phải xác thực mới được truy cập
                 .and()
                 .oauth2Login()
-                    .defaultSuccessUrl("/api/v1/auth/oauth2/success") // redirect to this url after successful login
-                    .userInfoEndpoint()
-                        .userService(oAuth2UserService()); // customize the user info returned by Google
+                .defaultSuccessUrl("/api/v1/auth/oauth2/success") // redirect to this url after successful login
+                .userInfoEndpoint()
+                .userService(oAuth2UserService()); // customize the user info returned by Google
         // Thêm một lớp Filter kiểm tra jwt
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
@@ -79,5 +80,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             return oAuth2User;
         };
     }
-    
+
 }

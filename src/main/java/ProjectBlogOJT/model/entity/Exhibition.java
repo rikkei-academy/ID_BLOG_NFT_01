@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Exhibition")
@@ -33,7 +31,7 @@ public class Exhibition {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date exhibitionExpiredDate;
     @Column(name = "exhibitionStatus")
-    private Boolean exhibitionStatus;
+    private boolean exhibitionStatus;
     @ManyToOne
     @JoinColumn(name = "Product")
     private Product product;
@@ -41,5 +39,5 @@ public class Exhibition {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name= "Exhibition_Tag", joinColumns = @JoinColumn(name = "exhibitionID"),
             inverseJoinColumns = @JoinColumn(name="tagID"))
-    private Set<Tag> listTag = new HashSet<>();
+    private List<Tag> listTag = new ArrayList<>();
 }

@@ -4,8 +4,12 @@ import ProjectBlogOJT.model.entity.Comment;
 import ProjectBlogOJT.model.repository.CommentRepository;
 import ProjectBlogOJT.model.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -35,5 +39,12 @@ public class CommentServiceImp implements CommentService {
     @Override
     public void delete(int commentID) {
        commentRepository.deleteById(commentID);
+    }
+
+    @Override
+    public Page<Comment> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {
+
+      Page<Comment> commentList =  commentRepository.findCommentByCommentDateBetween(from,to,pageable);
+        return commentList;
     }
 }

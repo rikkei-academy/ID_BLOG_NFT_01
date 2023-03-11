@@ -75,7 +75,7 @@ public class UserController {
     @PostMapping("/resetPass")
     public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
         String userName = tokenProvider.getUserNameFromJwt(token);
-        User user = userSevice.findByUserName(userName);
+        User user = userSevice.findByEmail(userName);
         user.setUserPassword(encoder.encode(newPass));
         return userSevice.saveOrUpdate(user);
     }
@@ -220,21 +220,11 @@ public class UserController {
         String avatar = oAuth2User.getAttribute("picture");
         String userName = oAuth2User.getAttribute("name");
         if (userSevice.existsByEmail(email)) {
-            User user = userSevice.findByEmail(email);
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(user.getUserName(),user.getUserPassword())
-//            );
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-//            if(!customUserDetails.isUserStatus()){
-//                return ResponseEntity.ok("Your account have been block !");
-//            } else {
-//                String jwt = tokenProvider.generateToken(customUserDetails);
-//                List<String> listRoles = customUserDetails.getAuthorities().stream()
-//                        .map(item -> item.getAuthority()).collect(Collectors.toList());
-//                return ResponseEntity.ok(new JwtResponse(user.getUserID(), jwt,"Bearer",user.getUserName(),user.getUserAvatar(),user.getUserEmail(),listRoles));
-//            }
-            return ResponseEntity.ok(user);
+                User user = userSevice.findByEmail(email);
+                String jwt = tokenProvider.generateTokenEmail(email);
+                List<String> listRole = new ArrayList<>();
+                listRole.add("ROLE_USER");
+                return ResponseEntity.ok(new JwtResponse(user.getUserID(), jwt,"Bearer",user.getUserName(),user.getUserAvatar(),user.getUserEmail(),listRole));
         } else {
             User user = new User();
             user.setUserName(userName);
