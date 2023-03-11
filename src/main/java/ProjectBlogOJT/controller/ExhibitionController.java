@@ -1,10 +1,8 @@
 package ProjectBlogOJT.controller;
 
-import ProjectBlogOJT.model.entity.Blog;
-import ProjectBlogOJT.model.entity.Comment;
-import ProjectBlogOJT.model.entity.Exhibition;
-import ProjectBlogOJT.model.entity.User;
+import ProjectBlogOJT.model.entity.*;
 import ProjectBlogOJT.model.service.ExhibitionService;
+import ProjectBlogOJT.model.service.TagService;
 import ProjectBlogOJT.payload.request.CommentCreate;
 import ProjectBlogOJT.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ import java.util.Map;
 public class ExhibitionController {
     @Autowired
     ExhibitionService exhibitionService;
+    @Autowired
+    TagService tagService;
     @GetMapping()
     public List<Exhibition> exhibitionsList() {
         List<Exhibition> exhibitions = exhibitionService.findAll();
@@ -44,17 +44,18 @@ public class ExhibitionController {
         return  exhibitionService.saveOrUpdate(exhibition);
     }
     @PostMapping
-    public Exhibition createComment(@RequestBody Exhibition exhibition) {
-
+    public Exhibition create(@RequestBody Exhibition exhibition) {
         return exhibitionService.saveOrUpdate(exhibition);
     }
 
     @PutMapping("/update/{exhibitionID}")
     public Exhibition updateComment(@PathVariable("exhibitionID") int exhibitionID, @RequestBody Exhibition exhibition) {
-        Exhibition exhibition1 = exhibitionService.findByID(exhibitionID);
-        exhibition1.setExhibitionDescription(exhibition.getExhibitionDescription());
-        exhibition1.setExhibitionTitle(exhibition1.getExhibitionTitle());
-        return exhibitionService.saveOrUpdate(exhibition1);
+        Exhibition exhibitionUpdate = exhibitionService.findByID(exhibitionID);
+        exhibitionUpdate.setExhibitionDescription(exhibition.getExhibitionDescription());
+        exhibitionUpdate.setExhibitionTitle(exhibition.getExhibitionTitle());
+        exhibitionUpdate.setExhibitionExpiredDate(exhibition.getExhibitionExpiredDate());
+        exhibitionUpdate.setListTag(exhibition.getListTag());
+        return exhibitionService.saveOrUpdate(exhibitionUpdate);
     }
     @GetMapping("/sortBetween")
     public ResponseEntity<Map<String, Object>> listExhibition(@RequestParam String form,
@@ -65,9 +66,9 @@ public class ExhibitionController {
         LocalDate toDate = LocalDate.parse(to);
         Sort.Order order;
         if (direction.equals("asc")){
-            order=new Sort.Order(Sort.Direction.ASC,"exhibitionDate");
+            order=new Sort.Order(Sort.Direction.ASC,"exhibitionCreatedDate");
         }else{
-            order=new Sort.Order(Sort.Direction.DESC,"exhibitionDate");
+            order=new Sort.Order(Sort.Direction.DESC,"exhibitionCreatedDate");
         }
         Pageable pageable = PageRequest.of(page, 2,Sort.by(order));
         Page<Exhibition> pageComment = exhibitionService.sortBetween(fromDate,toDate,pageable);
@@ -78,7 +79,8 @@ public class ExhibitionController {
         data.put("totalPages", pageComment.getTotalPages());
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
-
-
-
+    @GetMapping("sort")
+    public List<Exhibition> exhibitionListSort(@RequestParam String direction){
+        return exhibitionService.sortByDateCreate(direction);
+    }
 }
