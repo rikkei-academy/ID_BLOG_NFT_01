@@ -41,4 +41,5 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "User_Role",joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "roleID"))
     private Set<Roles> listRoles = new HashSet<>();
+
 }

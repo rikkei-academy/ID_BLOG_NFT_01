@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 @Table(name = "Exhibition")
 @Getter
@@ -43,4 +44,5 @@ public class Exhibition {
     @ManyToMany
     @JoinTable(name= "Exhibition_Tag", joinColumns = @JoinColumn(name = "exhibitionID"), inverseJoinColumns = @JoinColumn(name="tagID"))
     private List<Tag> listTag;
+
 }
