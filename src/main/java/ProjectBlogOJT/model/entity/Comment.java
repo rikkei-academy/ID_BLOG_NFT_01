@@ -33,8 +33,8 @@ public class Comment {
     @JoinColumn(name = "userID")
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "blogID")
     private Blog blog;
-
 }

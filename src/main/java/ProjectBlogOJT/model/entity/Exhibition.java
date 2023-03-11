@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 @Table(name = "Exhibition")
 @Getter
@@ -38,9 +39,13 @@ public class Exhibition {
     private Date exhibitionExpiredDate;
 
     @Column(name = "exhibitionStatus")
-    private Boolean exhibitionStatus;
+    private boolean exhibitionStatus;
+    @ManyToOne
+    @JoinColumn(name = "Product")
+    private Product product;
 
     @ManyToMany
     @JoinTable(name= "Exhibition_Tag", joinColumns = @JoinColumn(name = "exhibitionID"), inverseJoinColumns = @JoinColumn(name="tagID"))
     private List<Tag> listTag;
+
 }
