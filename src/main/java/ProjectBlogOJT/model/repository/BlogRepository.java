@@ -12,15 +12,6 @@ import java.util.List;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog,Integer> {
     List<Blog> findByBlogTitleContaining(String blogTitle);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     Page<Blog> findByBlogCreateDateBetween(LocalDate from, LocalDate to, Pageable pageable);
     List<Blog> findByUser_UserID(int userID);
->>>>>>> feature/#670/blog-manager
-
-=======
-    Page<Blog> findByBlogCreateDateBetween(LocalDate from, LocalDate to, Pageable pageable);
-    List<Blog> findByUser_UserID(int userID);
->>>>>>> feature/#670/blog-manager
 }
