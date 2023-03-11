@@ -51,13 +51,13 @@ public class CommentController {
     @PostMapping
     public Comment createComment(@RequestBody CommentCreate commentCreate) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User users = userService.findByID(userDetails.getUserId());
+        User user = userService.findByID(userDetails.getUserId());
         Blog blog = blogService.findByID(commentCreate.getBlogID());
         Comment comment = new Comment();
         comment.setCommentDate(commentCreate.getCommentDate());
         comment.setCommentContent(commentCreate.getCommentContent());
         comment.setCommentStatus(true);
-        comment.setUser(users);
+        comment.setUser(user);
         comment.setBlog(blog);
         return commentService.saveOrUpdate(comment);
     }

@@ -9,6 +9,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/#670/blog-manager
 
 @Entity
 @Table(name = "Exhibition")
@@ -37,7 +41,14 @@ public class Exhibition {
     private Date exhibitionExpiredDate;
 
     @Column(name = "exhibitionStatus")
+<<<<<<< HEAD
     private Boolean exhibitionStatus;
+=======
+    private boolean exhibitionStatus;
+    @ManyToOne
+    @JoinColumn(name = "Product")
+    private Product product;
+>>>>>>> feature/#670/blog-manager
 
     @ManyToMany
     @JoinTable(name= "Exhibition_Tag", joinColumns = @JoinColumn(name = "exhibitionID"), inverseJoinColumns = @JoinColumn(name="tagID"))

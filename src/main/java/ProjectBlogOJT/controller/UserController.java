@@ -111,7 +111,6 @@ public class UserController {
         }
         if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already"));
-
         }
         User users = new User();
         users.setUserName(signupRequest.getUserName());

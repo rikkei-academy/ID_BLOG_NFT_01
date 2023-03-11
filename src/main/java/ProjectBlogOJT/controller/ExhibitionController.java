@@ -36,7 +36,7 @@ public class ExhibitionController {
     @PostMapping("/delete/{exhibitionID}")
     public Exhibition delete(@PathVariable("exhibitionID") int exhibitionID) {
         Exhibition exhibition = exhibitionService.findByID(exhibitionID);
-        if (exhibition.isExhibitionStatus() == true) {
+        if (exhibition.isExhibitionStatus()) {
             exhibition.setExhibitionStatus(false);
         } else {
             exhibition.setExhibitionStatus(true);

@@ -15,54 +15,5 @@ import java.util.List;
 import java.util.Map;
 
 public class LikeController {
-    @GetMapping()
-    public List<Exhibition> exhibitionsList() {
-        List<Exhibition> exhibitions = exhibitionService.findAll();
-        return exhibitions;
-    }
-    @PostMapping("/delete/{exhibitionID}")
-    public Exhibition delete(@PathVariable("exhibitionID") int exhibitionID) {
-        Exhibition exhibition = exhibitionService.findByID(exhibitionID);
-        if (exhibition.isExhibitionStatus() == true) {
-            exhibition.setExhibitionStatus(false);
-        } else {
-            exhibition.setExhibitionStatus(true);
-        }
-        return  exhibitionService.saveOrUpdate(exhibition);
-    }
-    @PostMapping
-    public Exhibition createComment(@RequestBody Exhibition exhibition) {
-
-        return exhibitionService.saveOrUpdate(exhibition);
-    }
-
-    @PutMapping("/update/{exhibitionID}")
-    public Exhibition updateComment(@PathVariable("exhibitionID") int exhibitionID, @RequestBody Exhibition exhibition) {
-        Exhibition exhibition1 = exhibitionService.findByID(exhibitionID);
-        exhibition1.setExhibitionDescription(exhibition.getExhibitionDescription());
-        exhibition1.setExhibitionTitle(exhibition1.getExhibitionTitle());
-        return exhibitionService.saveOrUpdate(exhibition1);
-    }
-    @GetMapping("/sortBetween")
-    public ResponseEntity<Map<String, Object>> listExhibition(@RequestParam String form,
-                                                              @RequestParam String to,
-                                                              @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam String direction){
-        LocalDate fromDate = LocalDate.parse(form);
-        LocalDate toDate = LocalDate.parse(to);
-        Sort.Order order;
-        if (direction.equals("asc")){
-            order=new Sort.Order(Sort.Direction.ASC,"exhibitionDate");
-        }else{
-            order=new Sort.Order(Sort.Direction.DESC,"exhibitionDate");
-        }
-        Pageable pageable = PageRequest.of(page, 2,Sort.by(order));
-        Page<Exhibition> pageComment = exhibitionService.sortBetween(fromDate,toDate,pageable);
-        Map<String, Object> data = new HashMap<>();
-        data.put("comment", pageComment.getContent());
-        data.put("total", pageComment.getSize());
-        data.put("totalItems", pageComment.getTotalElements());
-        data.put("totalPages", pageComment.getTotalPages());
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
 }
+
