@@ -41,4 +41,8 @@ public class Blog {
     @ManyToMany
     @JoinTable(name= "Blog_Tag", joinColumns = @JoinColumn(name = "blogID"), inverseJoinColumns = @JoinColumn(name="tagID"))
     private List<Tag> listTag;
+
+    @OneToMany(mappedBy = "blog")
+    private List<Comment> listComment;
+
 }

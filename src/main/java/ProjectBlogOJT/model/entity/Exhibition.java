@@ -38,7 +38,7 @@ public class Exhibition {
     private Date exhibitionExpiredDate;
 
     @Column(name = "exhibitionStatus")
-    private Boolean exhibitionStatus;
+    private boolean exhibitionStatus;
 
     @ManyToMany
     @JoinTable(name= "Exhibition_Tag", joinColumns = @JoinColumn(name = "exhibitionID"), inverseJoinColumns = @JoinColumn(name="tagID"))
