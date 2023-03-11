@@ -85,5 +85,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             return oAuth2User;
         };
     }
-    
+
 }

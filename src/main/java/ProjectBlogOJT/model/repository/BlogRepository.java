@@ -14,5 +14,4 @@ public interface BlogRepository extends JpaRepository<Blog,Integer> {
     List<Blog> findByBlogTitleContaining(String blogTitle);
     Page<Blog> findByBlogCreateDateBetween(LocalDate from, LocalDate to, Pageable pageable);
     List<Blog> findByUser_UserID(int userID);
-
 }

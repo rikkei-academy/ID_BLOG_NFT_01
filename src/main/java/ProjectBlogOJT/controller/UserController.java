@@ -74,6 +74,7 @@ public class UserController {
     public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
         String userName = tokenProvider.getUserNameFromJwt(token);
         User user = userService.findByEmail(userName);
+
         user.setUserPassword(encoder.encode(newPass));
         return userService.saveOrUpdate(user);
     }
@@ -111,7 +112,6 @@ public class UserController {
         }
         if (userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already"));
-
         }
         User users = new User();
         users.setUserName(signupRequest.getUserName());
@@ -220,6 +220,7 @@ public class UserController {
         String userName = oAuth2User.getAttribute("name");
         if (userService.existsByEmail(email)) {
                 User user = userService.findByEmail(email);
+
                 String jwt = tokenProvider.generateTokenEmail(email);
                 List<String> listRole = new ArrayList<>();
                 listRole.add("ROLE_USER");

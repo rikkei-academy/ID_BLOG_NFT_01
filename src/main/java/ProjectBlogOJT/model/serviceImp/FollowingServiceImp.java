@@ -4,8 +4,11 @@ import ProjectBlogOJT.model.entity.Following;
 import ProjectBlogOJT.model.repository.FollowingRepository;
 import ProjectBlogOJT.model.service.FollowingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,5 +41,10 @@ public class FollowingServiceImp implements FollowingService {
     @Override
     public void delete(int followID) {
         followingRepository.deleteById(followID);
+    }
+
+    @Override
+    public Page<Following> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {
+        return null;
     }
 }

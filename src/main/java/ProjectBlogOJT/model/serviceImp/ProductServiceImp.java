@@ -4,6 +4,9 @@ import ProjectBlogOJT.model.entity.Product;
 import ProjectBlogOJT.model.repository.ProductRepository;
 import ProjectBlogOJT.model.service.ProductSevice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +42,24 @@ public class ProductServiceImp implements ProductSevice {
     }
 
     @Override
-    public List<Product> searchByName(String productName) {
-        return productRepository.findProductByProductNameContaining(productName);
+    public List<Product> searchByName(String productName, Integer min, Integer max) {
+        return productRepository.findProductByProductNameContainingAndProductPriceBetween(productName,min,max);
+    }
+    @Override
+    public List<Product> searchByPrice(int price) {
+        return productRepository.findProductByProductPrice(price);
+    }
+    @Override
+    public Page<Product> getPagging(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Product> sortByPrice(String directionPrice) {
+        if (directionPrice.equals("asc")) {
+            return productRepository.findAll(Sort.by("productPrice"));
+        } else {
+            return productRepository.findAll(Sort.by("productPrice").descending());
+        }
     }
 }

@@ -9,9 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "Exhibition")
@@ -45,5 +43,4 @@ public class Exhibition {
     @ManyToMany
     @JoinTable(name= "Exhibition_Tag", joinColumns = @JoinColumn(name = "exhibitionID"), inverseJoinColumns = @JoinColumn(name="tagID"))
     private List<Tag> listTag;
-
 }
