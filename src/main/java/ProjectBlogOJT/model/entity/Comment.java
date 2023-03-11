@@ -1,12 +1,9 @@
 package ProjectBlogOJT.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Entity
 @Table(name = "Comment")
@@ -19,18 +16,22 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentID")
     private int commentID;
+
     @Column(name = "commentDate")
     private LocalDate commentDate;
+
     @Column(name = "commentContent")
     private String commentContent;
+
     @Column(name = "commentStatus")
     private boolean commentStatus;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "blogID")
-    private Blog blog;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "blogID")
+    private Blog blog;
+
 }

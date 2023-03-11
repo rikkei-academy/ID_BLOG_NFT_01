@@ -2,7 +2,7 @@ package ProjectBlogOJT.model.serviceImp;
 
 import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.repository.UserRepository;
-import ProjectBlogOJT.model.service.UserSevice;
+import ProjectBlogOJT.model.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackOn = SQLException.class)
-public class UserSeviceImp implements UserSevice {
+public class UserServiceImp implements UserService {
     @Autowired
     UserRepository userRepository;
     @Override
@@ -88,6 +88,11 @@ public class UserSeviceImp implements UserSevice {
     @Override
     public Page<User> getPagging(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<User> findByFullName(String fullName) {
+        return userRepository.findByUserFullNameContaining(fullName);
     }
 
     public Page<User> getPagination(Pageable pageable) {

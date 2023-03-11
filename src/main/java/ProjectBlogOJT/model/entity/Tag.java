@@ -1,13 +1,12 @@
 package ProjectBlogOJT.model.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "Tag")
@@ -20,9 +19,11 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tagID")
     private int tagID;
-    @Column(name="tagName")
+
+    @Column(name = "tagName")
     private String tagName;
-    @Column(name="tagStatus")
+
+    @Column(name = "tagStatus")
     private Boolean tagStatus;
 
 }

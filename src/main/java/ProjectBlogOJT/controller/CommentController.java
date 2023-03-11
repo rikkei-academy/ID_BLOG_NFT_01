@@ -2,11 +2,10 @@ package ProjectBlogOJT.controller;
 
 import ProjectBlogOJT.model.entity.Blog;
 import ProjectBlogOJT.model.entity.Comment;
-import ProjectBlogOJT.model.entity.Product;
 import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.service.BlogService;
 import ProjectBlogOJT.model.service.CommentService;
-import ProjectBlogOJT.model.service.UserSevice;
+import ProjectBlogOJT.model.service.UserService;
 import ProjectBlogOJT.payload.request.CommentCreate;
 import ProjectBlogOJT.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class CommentController {
     @Autowired
     CommentService commentService;
     @Autowired
-    UserSevice userSevice;
+    UserService userService;
     @Autowired
     BlogService blogService;
     @GetMapping()
@@ -52,7 +51,7 @@ public class CommentController {
     @PostMapping
     public Comment createComment(@RequestBody CommentCreate commentCreate) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User users = userSevice.findByID(userDetails.getUserId());
+        User users = userService.findByID(userDetails.getUserId());
         Blog blog = blogService.findByID(commentCreate.getBlogID());
         Comment comment = new Comment();
         comment.setCommentDate(commentCreate.getCommentDate());

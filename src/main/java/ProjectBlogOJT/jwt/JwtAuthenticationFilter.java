@@ -39,9 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Boolean test = jwtTokenProvider.validateToken(jwt);
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
                 //Lay userName tu chuoi jwt
-                String userName = jwtTokenProvider.getUserNameFromJwt(jwt);
-                //Lay thong tin nguoi dung tu userID
-                UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
+                String userNameOrEmail = jwtTokenProvider.getUserNameFromJwt(jwt);
+                UserDetails userDetails;
+                if(userNameOrEmail.contains("@")){
+                    //Lay thong tin nguoi dung tu email
+                    userDetails = customUserDetailsService.loadUserByEmail(userNameOrEmail);
+                }else {
+                    //Lay thong tin nguoi dung tu userName
+                    userDetails = customUserDetailsService.loadUserByUsername(userNameOrEmail);
+                }
                 if (userDetails != null) {
                     //Neu nguoi dung hop le set thong tin cho security context
                     UsernamePasswordAuthenticationToken authentication
