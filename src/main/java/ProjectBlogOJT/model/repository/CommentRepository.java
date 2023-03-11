@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment,Integer> {
     Page<Comment> findCommentByCommentDateBetween(LocalDate from, LocalDate to, Pageable pageable);
+    List<Comment> findCommentByCommentStatus(Boolean status);
 
 }
