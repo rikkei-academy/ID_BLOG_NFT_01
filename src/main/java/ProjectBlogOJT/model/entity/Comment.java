@@ -19,18 +19,22 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentID")
     private int commentID;
+
     @Column(name = "commentDate")
     private LocalDate commentDate;
+
     @Column(name = "commentContent")
     private String commentContent;
+
     @Column(name = "commentStatus")
     private boolean commentStatus;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "blogID")
-    private Blog blog;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "blogID")
+    private Blog blog;
+
 }

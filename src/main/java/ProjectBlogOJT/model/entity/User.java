@@ -1,6 +1,7 @@
 package ProjectBlogOJT.model.entity;
 
 import lombok.Data;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,33 +17,31 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userID")
     private int userID;
+
     @Column(name = "userName")
     private String userName;
+
     @Column(name = "userPassword")
     private String userPassword;
+
     @Column(name = "userEmail")
     private String userEmail;
+
     @Column(name = "userDescription")
     private String userDescription;
+
     @Column(name = "userAvatar")
     private String userAvatar;
+
     @Column(name = "userStatus")
     private boolean userStatus;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name= "User_Role", joinColumns = @JoinColumn(name = "userID"),
-    inverseJoinColumns = @JoinColumn(name="RoleId"))
+    @Column(name = "userFullName")
+    private String userFullName;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "User_Role",joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "roleID"))
     private Set<Roles> listRoles = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name= "Likes", joinColumns = @JoinColumn(name = "userID"),
-            inverseJoinColumns = @JoinColumn(name="blogID"))
-    private List<Blog> listTag = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<History> listHistory;
-    @OneToMany(mappedBy = "user")
-    private List<Comment> listComment;
-
 
 }
