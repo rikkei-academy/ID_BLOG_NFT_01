@@ -1,6 +1,7 @@
 package ProjectBlogOJT.model.service;
 
 import ProjectBlogOJT.model.entity.Comment;
+import ProjectBlogOJT.model.entity.Exhibition;
 import ProjectBlogOJT.model.entity.History;
 import ProjectBlogOJT.model.entity.Product;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ public interface HistoryService {
     History save(History history);
     History saveOrUpdate(History history);
     void delete(int historyID);
+    List<History> sortByDateCreate(String direction);
+
     Page<History> sortBetween(LocalDate from, LocalDate to, Pageable pageable);
 
 }
