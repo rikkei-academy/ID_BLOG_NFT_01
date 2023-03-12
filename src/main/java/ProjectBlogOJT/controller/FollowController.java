@@ -1,6 +1,10 @@
 package ProjectBlogOJT.controller;
 
 import ProjectBlogOJT.model.entity.Exhibition;
+import ProjectBlogOJT.model.entity.Following;
+import ProjectBlogOJT.model.entity.Likes;
+import ProjectBlogOJT.model.service.FollowingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +21,23 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/follow")
 public class FollowController {
+    @Autowired
+    FollowingService followingService;
+
+    @GetMapping()
+    public List<Following> getAll(){
+        return followingService.findAll();
+    }
+
+    @PostMapping()
+    public Following createLike(@RequestBody Following following){
+        return followingService.save(following);
+    }
+    @PostMapping("deleteFollowing/{followID}")
+    public Following createLike(@PathVariable("followID") int followID){
+        Following following = followingService.findByID(followID);
+        following.setFollowStatus(false);
+        return followingService.save(following);
+    }
 
 }
