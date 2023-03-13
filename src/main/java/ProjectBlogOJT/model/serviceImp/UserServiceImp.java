@@ -95,6 +95,11 @@ public class UserServiceImp implements UserService {
         return userRepository.findByUserFullNameContaining(fullName);
     }
 
+    @Override
+    public int followingQuantity(int followingUserID) {
+        return userRepository.followingQuantity(followingUserID);
+    }
+
     public Page<User> getPagination(Pageable pageable) {
         return userRepository.findAll(pageable);
     }

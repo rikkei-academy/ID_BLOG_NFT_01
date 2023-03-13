@@ -37,6 +37,9 @@ public class User {
     @Column(name = "userFullName")
     private String userFullName;
 
+    @Column(name = "userTagName")
+    private String userTagName;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "User_Role",joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "roleID"))

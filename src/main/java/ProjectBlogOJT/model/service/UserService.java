@@ -32,4 +32,6 @@ public interface UserService {
     Page<User> getPagging(Pageable pageable);
 
     List<User> findByFullName(String fullName);
+
+    int followingQuantity(int followingUserID);
 }

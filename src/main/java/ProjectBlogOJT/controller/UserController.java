@@ -12,6 +12,7 @@ import ProjectBlogOJT.payload.request.SignupRequest;
 import ProjectBlogOJT.payload.request.UserUpdate;
 import ProjectBlogOJT.payload.response.JwtResponse;
 import ProjectBlogOJT.payload.response.MessageResponse;
+import ProjectBlogOJT.payload.response.PopularArtist;
 import ProjectBlogOJT.security.CustomUserDetails;
 import ProjectBlogOJT.sendEmail.ProvideSendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -289,5 +290,23 @@ public class UserController {
         }
         user.setListRoles(listRoles);
         return userService.saveOrUpdate(user);
+    }
+
+    @GetMapping("getPopularArtist")
+    public List<PopularArtist> getPopularArtist() {
+        List<User> listUser = userService.findAll();
+        List<PopularArtist> listPopularArtist = new ArrayList<>();
+        for (User user: listUser) {
+            int followQuantity = userService.followingQuantity(user.getUserID());
+            PopularArtist popularArtist = new PopularArtist(user.getUserID(), user.getUserFullName(), user.getUserTagName(), user.getUserAvatar(), followQuantity);
+            listPopularArtist.add(popularArtist);
+        }
+        Collections.sort(listPopularArtist, new Comparator<PopularArtist>() {
+            @Override
+            public int compare(PopularArtist u1, PopularArtist u2) {
+                return u2.getFollowQuantity() - u1.getFollowQuantity();
+            }
+        });
+        return listPopularArtist;
     }
 }

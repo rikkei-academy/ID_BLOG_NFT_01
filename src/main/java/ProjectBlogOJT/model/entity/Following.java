@@ -21,7 +21,7 @@ public class Following {
     private int followID;
 
     @Column(name = "followingUserID")
-    private int followingUser;
+    private int followingUserID;
 
     @Column(name = "followStatus")
     private boolean followStatus;
