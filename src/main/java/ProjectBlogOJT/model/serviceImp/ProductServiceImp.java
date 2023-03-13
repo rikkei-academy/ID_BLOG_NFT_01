@@ -1,8 +1,10 @@
 package ProjectBlogOJT.model.serviceImp;
 
 import ProjectBlogOJT.model.entity.Product;
+import ProjectBlogOJT.model.entity.Tag;
 import ProjectBlogOJT.model.repository.ProductRepository;
 import ProjectBlogOJT.model.service.ProductSevice;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,11 +66,17 @@ public class ProductServiceImp implements ProductSevice {
     }
 
     @Override
+
+    public Page<Product> getProductByTagName(Tag tag, Pageable pageable) {
+        return productRepository.findProductByListTagContaining(tag, pageable);
+    }
+@Override
     public List<Product> sortByCreateDate(String direction) {
         if(direction.equals("asc")){
             return productRepository.findAll(Sort.by("productCreateDate").ascending());
         }else {
             return productRepository.findAll(Sort.by("productCreateDate").descending());
         }
+
     }
 }

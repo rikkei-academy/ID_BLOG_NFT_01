@@ -18,5 +18,4 @@ public class CommentCreate {
     private boolean commentStatus;
     private Integer blogID;
 
-
 }
