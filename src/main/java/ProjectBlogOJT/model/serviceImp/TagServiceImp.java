@@ -39,4 +39,11 @@ public class TagServiceImp implements TagService {
     public void delete(int tagID) {
         tagRepository.deleteById(tagID);
     }
+
+    @Override
+    public Tag findByTagName(String tagName) {
+        return tagRepository.findTagByTagName(tagName);
+    }
+
+
 }

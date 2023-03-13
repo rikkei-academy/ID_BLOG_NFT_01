@@ -29,4 +29,9 @@ public class Tag {
     @Column(name = "tagStatus")
     private Boolean tagStatus;
 
+    @Override
+    public String toString(){
+        return this.getTagName();
+    }
+
 }
