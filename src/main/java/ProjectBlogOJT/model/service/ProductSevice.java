@@ -1,6 +1,7 @@
 package ProjectBlogOJT.model.service;
 
 import ProjectBlogOJT.model.entity.Product;
+import ProjectBlogOJT.model.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,6 +19,7 @@ public interface ProductSevice {
     Page<Product> getPagging(Pageable pageable);
 
     List<Product> sortByPrice(String directionPrice);
+    Page<Product> getProductByTagName(Tag tag , Pageable pageable);
 
 
 }

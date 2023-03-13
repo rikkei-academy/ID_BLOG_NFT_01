@@ -1,8 +1,10 @@
 package ProjectBlogOJT.model.serviceImp;
 
 import ProjectBlogOJT.model.entity.Product;
+import ProjectBlogOJT.model.entity.Tag;
 import ProjectBlogOJT.model.repository.ProductRepository;
 import ProjectBlogOJT.model.service.ProductSevice;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,5 +63,10 @@ public class ProductServiceImp implements ProductSevice {
         } else {
             return productRepository.findAll(Sort.by("productPrice").descending());
         }
+    }
+
+    @Override
+    public Page<Product> getProductByTagName(Tag tag, Pageable pageable) {
+        return productRepository.findProductByListTagContaining(tag, pageable);
     }
 }

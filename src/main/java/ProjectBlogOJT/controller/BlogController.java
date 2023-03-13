@@ -76,12 +76,14 @@ public class BlogController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam String direction
     ){
+
         Sort.Order order;
         if (direction.equals("asc")){
             order=new Sort.Order(Sort.Direction.ASC,"blogCreateDate");
         }else{
             order=new Sort.Order(Sort.Direction.DESC,"blogCreateDate");
         }
+
         LocalDate fromDate = LocalDate.parse(from);
         LocalDate toDate = LocalDate.parse(to);
 
