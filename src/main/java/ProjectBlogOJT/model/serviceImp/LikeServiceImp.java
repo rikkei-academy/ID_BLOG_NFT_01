@@ -30,4 +30,9 @@ public class LikeServiceImp implements LikeService {
     public void delete(int likeID) {
         likeRepository.deleteById(likeID);
     }
+
+    @Override
+    public int countLike(int blogID) {
+        return likeRepository.likeQuantity(blogID);
+    }
 }
