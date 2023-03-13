@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -84,8 +85,10 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
-
-
-
+    @GetMapping("/sortByCreateDate")
+    public ResponseEntity<List<Product>> sortByProductCreateDate(@RequestParam String direction){
+        List<Product> listProduct = productSevice.sortByCreateDate(direction);
+        return new ResponseEntity<>(listProduct, HttpStatus.OK);
+    }
 
 }

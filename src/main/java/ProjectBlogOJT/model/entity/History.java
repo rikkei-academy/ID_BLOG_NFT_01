@@ -1,7 +1,5 @@
 package ProjectBlogOJT.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +15,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-
 public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

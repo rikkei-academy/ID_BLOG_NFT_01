@@ -10,6 +10,4 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
   List<Product> findProductByProductNameContainingAndProductPriceBetween(String productName,int min, int max);
   List<Product> findProductByProductPrice(Integer price);
-
-
 }

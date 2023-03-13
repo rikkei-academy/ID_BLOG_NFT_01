@@ -1,7 +1,6 @@
 package ProjectBlogOJT.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-
 
 @Entity
 @Table(name = "Exhibition")
@@ -32,13 +30,17 @@ public class Exhibition {
     private String exhibitionDescription;
 
     @Column(name = "exhibitionCreatedDate")
-    private LocalDate exhibitionCreatedDate;
+    @JsonFormat(pattern = "YYYY-MM-DD HH:MM:SS")
+    private Date exhibitionCreatedDate;
 
     @Column(name = "exhibitionExpiredDate")
-    private LocalDate exhibitionExpiredDate;
+    @JsonFormat(pattern = "YYYY-MM-DD HH:MM:SS")
+    private Date exhibitionExpiredDate;
+
 
     @Column(name = "exhibitionStatus")
     private boolean exhibitionStatus;
+
     @ManyToOne
     @JoinColumn(name = "Product")
     private Product product;

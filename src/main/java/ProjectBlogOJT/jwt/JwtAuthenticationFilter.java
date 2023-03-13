@@ -39,14 +39,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Boolean test = jwtTokenProvider.validateToken(jwt);
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
                 //Lay userName tu chuoi jwt
-                String userNameOrEamil = jwtTokenProvider.getUserNameFromJwt(jwt);
+                String userNameOrEmail = jwtTokenProvider.getUserNameFromJwt(jwt);
                 UserDetails userDetails;
-                if(userNameOrEamil.contains("@")){
+                if(userNameOrEmail.contains("@")){
                     //Lay thong tin nguoi dung tu email
-                    userDetails = customUserDetailsService.loadUserByEmail(userNameOrEamil);
+                    userDetails = customUserDetailsService.loadUserByEmail(userNameOrEmail);
                 }else {
                     //Lay thong tin nguoi dung tu userName
-                    userDetails = customUserDetailsService.loadUserByUsername(userNameOrEamil);
+                    userDetails = customUserDetailsService.loadUserByUsername(userNameOrEmail);
                 }
                 if (userDetails != null) {
                     //Neu nguoi dung hop le set thong tin cho security context

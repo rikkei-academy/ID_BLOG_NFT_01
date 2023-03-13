@@ -35,8 +35,12 @@ public class Product {
     private String productDescription;
 
     @Column(name = "productCreateDate")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:SS")
     private Date productCreateDate;
+
+    @Column(name= "productExpiredAuctionDate")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:SS")
+    private Date productExpiredAuctionDate;
 
     @Column(name = "productStatus")
     private boolean productStatus;

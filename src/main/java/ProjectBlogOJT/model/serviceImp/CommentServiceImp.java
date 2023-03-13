@@ -16,6 +16,7 @@ import java.util.List;
 public class CommentServiceImp implements CommentService {
     @Autowired
     CommentRepository commentRepository;
+
     @Override
     public List<Comment> findAll() {
         return commentRepository.findCommentByCommentStatus(true);
@@ -38,13 +39,11 @@ public class CommentServiceImp implements CommentService {
 
     @Override
     public void delete(int commentID) {
-       commentRepository.deleteById(commentID);
+        commentRepository.deleteById(commentID);
     }
 
     @Override
     public Page<Comment> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {
-
-      Page<Comment> commentList =  commentRepository.findCommentByCommentDateBetween(from,to,pageable);
-        return commentList;
+        return commentRepository.findCommentByCommentDateBetween(from,to,pageable);
     }
 }
