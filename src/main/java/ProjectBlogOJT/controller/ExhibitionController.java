@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +46,21 @@ public class ExhibitionController {
     }
     @PostMapping
     public Exhibition create(@RequestBody Exhibition exhibition) {
+        List<Tag> tagList = new ArrayList<>();
+        for (int i = 0; i < exhibition.getListTag().size(); i++) {
+            if(tagService.findByTagName(String.valueOf(exhibition.getListTag().get(i)))!=null){
+                Tag tagFind = tagService.findByTagName(String.valueOf(exhibition.getListTag().get(i)));
+                tagList.add(tagFind);
+            }else {
+                Tag tag = new Tag();
+                tag.setTagName(String.valueOf(exhibition.getListTag().get(i)));
+                tag.setTagStatus(true);
+                tagList.add(tagService.save(tag));
+            }
+        }
+        exhibition.setListTag(tagList);
         return exhibitionService.saveOrUpdate(exhibition);
     }
-
     @PutMapping("/update/{exhibitionID}")
     public Exhibition updateComment(@PathVariable("exhibitionID") int exhibitionID, @RequestBody Exhibition exhibition) {
         Exhibition exhibitionUpdate = exhibitionService.findByID(exhibitionID);

@@ -11,4 +11,5 @@ public interface TagService {
     Tag save(Tag tag);
     Tag saveOrUpdate(Tag tag);
     void delete(int tagID);
+    Tag findByTagName(String tagName);
 }

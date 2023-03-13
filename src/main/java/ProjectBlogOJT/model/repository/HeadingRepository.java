@@ -1,12 +1,9 @@
 package ProjectBlogOJT.model.repository;
 
-import ProjectBlogOJT.model.entity.Tag;
+import ProjectBlogOJT.model.entity.Heading;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TagRepository extends JpaRepository<Tag, Integer> {
-    Tag findTagByTagName(String tagName);
-
-
+public interface HeadingRepository extends JpaRepository<Heading, Integer> {
 }
