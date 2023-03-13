@@ -5,6 +5,7 @@ import ProjectBlogOJT.model.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ProductSevice {
@@ -21,5 +22,5 @@ public interface ProductSevice {
     List<Product> sortByPrice(String directionPrice);
     Page<Product> getProductByTagName(Tag tag , Pageable pageable);
 
-
+    List<Product> sortByCreateDate(String direction);
 }

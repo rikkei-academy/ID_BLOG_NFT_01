@@ -66,7 +66,17 @@ public class ProductServiceImp implements ProductSevice {
     }
 
     @Override
+
     public Page<Product> getProductByTagName(Tag tag, Pageable pageable) {
         return productRepository.findProductByListTagContaining(tag, pageable);
+    }
+@Override
+    public List<Product> sortByCreateDate(String direction) {
+        if(direction.equals("asc")){
+            return productRepository.findAll(Sort.by("productCreateDate").ascending());
+        }else {
+            return productRepository.findAll(Sort.by("productCreateDate").descending());
+        }
+
     }
 }

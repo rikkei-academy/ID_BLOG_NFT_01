@@ -2,7 +2,6 @@ package ProjectBlogOJT.controller;
 
 import ProjectBlogOJT.model.entity.Blog;
 import ProjectBlogOJT.model.entity.Comment;
-import ProjectBlogOJT.model.entity.Product;
 import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.service.BlogService;
 import ProjectBlogOJT.model.service.CommentService;
@@ -32,7 +31,6 @@ public class CommentController {
     CommentService commentService;
     @Autowired
     UserService userService;
-
     @Autowired
     BlogService blogService;
     @GetMapping()

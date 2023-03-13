@@ -15,7 +15,4 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
   List<Product> findProductByProductPrice(Integer price);
   Page<Product> findProductByListTagContaining(Tag tag, Pageable pageable);
 
-
-
-
 }

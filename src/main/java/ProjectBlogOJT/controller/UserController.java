@@ -74,7 +74,6 @@ public class UserController {
     public User resetPass(@RequestParam("token") String token, @RequestBody String newPass) {
         String userName = tokenProvider.getUserNameFromJwt(token);
         User user = userService.findByEmail(userName);
-
         user.setUserPassword(encoder.encode(newPass));
         return userService.saveOrUpdate(user);
     }
@@ -218,9 +217,9 @@ public class UserController {
         String email = oAuth2User.getAttribute("email");
         String avatar = oAuth2User.getAttribute("picture");
         String userName = oAuth2User.getAttribute("name");
+
         if (userService.existsByEmail(email)) {
                 User user = userService.findByEmail(email);
-
                 String jwt = tokenProvider.generateTokenEmail(email);
                 List<String> listRole = new ArrayList<>();
                 listRole.add("ROLE_USER");
@@ -241,6 +240,13 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
     }
+
+    @GetMapping("/login-Facebook")
+    public RedirectView loginWithFacebook(){
+        return new RedirectView("/oauth2/authorization/facebook");
+    }
+
+
     public String randomPassword(){
         int length = 10;
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

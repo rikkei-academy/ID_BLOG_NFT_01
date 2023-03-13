@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -123,6 +124,7 @@ public class ProductController {
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
+
     @GetMapping("/getByTagName/{tagName}")
     public ResponseEntity<Map<String, Object>> getByTagName(@PathVariable("tagName") String tagName,
                                                             @RequestParam(defaultValue = "0") int page,
@@ -144,6 +146,12 @@ public class ProductController {
         data.put("totalPages", pageProduct.getTotalPages());
         return new ResponseEntity<>(data, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/sortByCreateDate")
+    public ResponseEntity<List<Product>> sortByProductCreateDate(@RequestParam String direction){
+        List<Product> listProduct = productSevice.sortByCreateDate(direction);
+        return new ResponseEntity<>(listProduct, HttpStatus.OK);
     }
 
 
