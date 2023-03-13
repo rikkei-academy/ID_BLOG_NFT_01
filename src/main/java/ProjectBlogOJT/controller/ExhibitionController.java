@@ -3,8 +3,6 @@ package ProjectBlogOJT.controller;
 import ProjectBlogOJT.model.entity.*;
 import ProjectBlogOJT.model.service.ExhibitionService;
 import ProjectBlogOJT.model.service.TagService;
-import ProjectBlogOJT.payload.request.CommentCreate;
-import ProjectBlogOJT.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;

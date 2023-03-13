@@ -2,8 +2,10 @@ package ProjectBlogOJT.controller;
 
 
 import ProjectBlogOJT.model.entity.Blog;
+import ProjectBlogOJT.model.entity.Tag;
 import ProjectBlogOJT.model.entity.User;
 import ProjectBlogOJT.model.service.BlogService;
+import ProjectBlogOJT.model.service.TagService;
 import ProjectBlogOJT.model.service.UserService;
 import ProjectBlogOJT.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +31,11 @@ import java.util.Map;
 public class BlogController {
     @Autowired
     BlogService blogService;
-
     @Autowired
     UserService userService;
+
+    @Autowired
+    TagService tagService;
 
     @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     @GetMapping("/getAll")
@@ -43,6 +47,18 @@ public class BlogController {
     public Blog create(@RequestBody Blog blog ){
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByID(userDetails.getUserId());
+        List<Tag> listTag = new ArrayList<>();
+        for (Tag tag:blog.getListTag()) {
+            if(tagService.findByTagName(tag.getTagName())!=null){
+                listTag.add(tag);
+            }else {
+                Tag tagNew = new Tag();
+                tagNew.setTagName(tag.getTagName());
+                tagNew.setTagStatus(true);
+                listTag.add(tagService.save(tagNew));
+            }
+        }
+        blog.setListTag(listTag);
         blog.setUser(user);
         return blogService.saveOrUpdate(blog);
     }
@@ -53,7 +69,7 @@ public class BlogController {
         blogUpdated.setBlogTitle(blog.getBlogTitle());
         blogUpdated.setBlogContent(blog.getBlogContent());
         blogUpdated.setBlogImage(blog.getBlogImage());
-//        blogUpdated.setBlogCreateDate(blog.getBlogCreateDate());
+        blogUpdated.setBlogCreateDate(blog.getBlogCreateDate());
         return blogService.saveOrUpdate(blogUpdated);
     }
     @PreAuthorize("hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")

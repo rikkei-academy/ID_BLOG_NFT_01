@@ -240,6 +240,13 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
     }
+
+    @GetMapping("/login-Facebook")
+    public RedirectView loginWithFacebook(){
+        return new RedirectView("/oauth2/authorization/facebook");
+    }
+
+
     public String randomPassword(){
         int length = 10;
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

@@ -62,4 +62,13 @@ public class ProductServiceImp implements ProductSevice {
             return productRepository.findAll(Sort.by("productPrice").descending());
         }
     }
+
+    @Override
+    public List<Product> sortByCreateDate(String direction) {
+        if(direction.equals("asc")){
+            return productRepository.findAll(Sort.by("productCreateDate").ascending());
+        }else {
+            return productRepository.findAll(Sort.by("productCreateDate").descending());
+        }
+    }
 }
