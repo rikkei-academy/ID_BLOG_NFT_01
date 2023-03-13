@@ -10,4 +10,6 @@ public interface LikeService {
     Likes findByID(int likeID);
     Likes save(Likes likes);
     void delete(int likeID);
+
+    int countLike(int blogID);
 }
