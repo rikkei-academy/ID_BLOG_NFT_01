@@ -6,6 +6,7 @@ import ProjectBlogOJT.model.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,6 +43,14 @@ public class HistoryServiceImp implements HistoryService {
     public void delete(int historyID) {
         historyRepository.deleteById(historyID);
     }
+
+    @Override
+    public List<History> sortByDateCreate(String direction) {
+        if (direction.equals("asc")) {
+            return historyRepository.findAll(Sort.by("historyDataTime"));
+        } else {
+            return historyRepository.findAll(Sort.by("historyDataTime").descending());
+        }    }
 
     @Override
     public Page<History> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {

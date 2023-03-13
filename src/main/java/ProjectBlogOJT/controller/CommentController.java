@@ -54,7 +54,7 @@ public class CommentController {
         User user = userService.findByID(userDetails.getUserId());
         Blog blog = blogService.findByID(commentCreate.getBlogID());
         Comment comment = new Comment();
-        comment.setCommentDate(commentCreate.getCommentDate());
+        comment.setCommentDate(java.time.LocalDate.now());
         comment.setCommentContent(commentCreate.getCommentContent());
         comment.setCommentStatus(true);
         comment.setUser(user);
@@ -67,6 +67,12 @@ public class CommentController {
         Comment commentUpdate = commentService.findByID(commentID);
         commentUpdate.setCommentContent(comment.getCommentContent());
         commentUpdate.setCommentDate(java.time.LocalDate.now());
+        return commentService.saveOrUpdate(commentUpdate);
+    }
+    @PostMapping("/deleteComment/{commentID}")
+    public Comment deletecomment(@PathVariable("commentID") int commentID){
+        Comment commentUpdate = commentService.findByID(commentID);
+        commentUpdate.setCommentStatus(false);
         return commentService.saveOrUpdate(commentUpdate);
     }
     @GetMapping("/sortBetween")

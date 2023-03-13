@@ -1,6 +1,7 @@
 package ProjectBlogOJT.controller;
 
 import ProjectBlogOJT.model.entity.Exhibition;
+import ProjectBlogOJT.model.entity.History;
 import ProjectBlogOJT.model.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,5 +21,27 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/history")
 public class HistoryController {
+    @Autowired
+    HistoryService historyService;
+
+    @GetMapping()
+    public List<History> exhibitionsList() {
+        List<History> histories = historyService.findAll();
+        return histories;
+    }
+    @PostMapping("/deleteHistory/{historyID}")
+    public ResponseEntity<String> delete(@PathVariable("historyID") int historyID) {
+        historyService.delete(historyID);
+        return  ResponseEntity.ok("Delete complete !");
+    }
+    @PostMapping
+    public History create(@RequestBody History history) {
+        return historyService.saveOrUpdate(history);
+    }
+
+    @GetMapping("sort")
+    public List<History> historiesListSort(@RequestParam String direction){
+        return historyService.sortByDateCreate(direction);
+    }
 
 }

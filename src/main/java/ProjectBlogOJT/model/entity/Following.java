@@ -24,7 +24,7 @@ public class Following {
     private int followingUser;
 
     @Column(name = "followStatus")
-    private int followStatus;
+    private boolean followStatus;
 
     @ManyToOne
     @JoinColumn(name = "userID")

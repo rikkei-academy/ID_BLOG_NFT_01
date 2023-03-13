@@ -7,6 +7,7 @@ import ProjectBlogOJT.model.service.ExhibitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,6 +43,15 @@ public class ExhibitionServiceImp implements ExhibitionService {
     @Override
     public void delete(int exhibitionID) {
         exhibitionRepository.deleteById(exhibitionID);
+    }
+
+    @Override
+    public List<Exhibition> sortByDateCreate(String direction) {
+        if (direction.equals("asc")) {
+            return exhibitionRepository.findAll(Sort.by("exhibitionCreatedDate"));
+        } else {
+            return exhibitionRepository.findAll(Sort.by("exhibitionCreatedDate").descending());
+        }
     }
 
     @Override

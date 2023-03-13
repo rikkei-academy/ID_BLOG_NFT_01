@@ -19,7 +19,7 @@ public class CommentServiceImp implements CommentService {
 
     @Override
     public List<Comment> findAll() {
-        return commentRepository.findAll();
+        return commentRepository.findCommentByCommentStatus(true);
     }
 
     @Override
@@ -44,7 +44,6 @@ public class CommentServiceImp implements CommentService {
 
     @Override
     public Page<Comment> sortBetween(LocalDate from, LocalDate to, Pageable pageable) {
-        Page<Comment> commentList = commentRepository.findCommentByCommentDateBetween(from, to, pageable);
-        return commentList;
+        return commentRepository.findCommentByCommentDateBetween(from,to,pageable);
     }
 }

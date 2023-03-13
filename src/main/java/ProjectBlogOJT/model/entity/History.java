@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -21,7 +22,7 @@ public class History {
     private int historyID;
 
     @Column(name = "historyDataTime")
-    private Date historyDataTime;
+    private LocalDate historyDataTime;
 
     @ManyToOne
     @JoinColumn(name = "productID")
